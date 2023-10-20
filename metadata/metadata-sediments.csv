@@ -1,0 +1,14 @@
+sample-id,type,site,depth
+#q2:types,categorical,categorical,categorical
+FOGO1,sediment,Little_Fogo_Island,1 cm
+FOGO2,sediment,Little_Fogo_Island,2 cm
+FOGO4,sediment,Little_Fogo_Island,4 cm
+FOGO6,sediment,Little_Fogo_Island,6 cm
+IMP1,sediment,Cape_Impacted_Site,1 cm
+IMP2,sediment,Cape_Impacted_Site,2 cm
+IMP4,sediment,Cape_Impacted_Site,4 cm
+IMP-8,sediment,Cape_Impacted_Site,8 cm
+REF1,sediment,Cape_Reference_Site,1 cm
+REF2,sediment,Cape_Reference_Site,2 cm
+REF4,sediment,Cape_Reference_Site,4 cm
+REF8,sediment,Cape_Reference_Site,8 cm

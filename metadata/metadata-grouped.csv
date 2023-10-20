@@ -1,0 +1,9 @@
+sample-id,type,group
+#q2:types,categorical,categorical
+ATPU,bird,Fratercula_arctica
+BLKI,bird,Rissa_tridactyla
+COMU,bird,Uria_aalge
+FOGO,sediment,Little_Fogo_Island
+IMP,sediment,Cape_Impacted_Site
+NOGA,bird,Morus_bassanus
+REF,sediment,Cape_Reference_Site

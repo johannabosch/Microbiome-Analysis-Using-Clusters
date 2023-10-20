@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>6 DATA PREPROCESSING | 16S Microbiome Analysis on a Computing Cluster</title>
+  <meta name="description" content="6 DATA PREPROCESSING | 16S Microbiome Analysis on a Computing Cluster" />
+  <meta name="generator" content="bookdown 0.34 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="6 DATA PREPROCESSING | 16S Microbiome Analysis on a Computing Cluster" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta name="github-repo" content="johannabosch/QIIME2_for_Graham" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="6 DATA PREPROCESSING | 16S Microbiome Analysis on a Computing Cluster" />
+  
+  
+  
+
+<meta name="author" content="Johanna Bosch" />
+
+
+<meta name="date" content="2023-10-20" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="getting-started-with-qiime2.html"/>
+<link rel="next" href="diversity-analyses.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Comparative 16S Amplicon Analysis using QIIME2 on a computing cluster: Tutorial and Resources</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome!</a></li>
+<li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> <strong>INTRODUCTION</strong></a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="introduction.html"><a href="introduction.html#a-brief-project-review"><i class="fa fa-check"></i><b>1.1</b> <strong>A brief project review</strong></a>
+<ul>
+<li class="chapter" data-level="1.1.1" data-path="introduction.html"><a href="introduction.html#study-species-and-sites"><i class="fa fa-check"></i><b>1.1.1</b> Study species and sites</a></li>
+<li class="chapter" data-level="1.1.2" data-path="introduction.html"><a href="introduction.html#sequencing-library-prep"><i class="fa fa-check"></i><b>1.1.2</b> Sequencing &amp; library prep</a></li>
+<li class="chapter" data-level="1.1.3" data-path="introduction.html"><a href="introduction.html#files-after-sequencing"><i class="fa fa-check"></i><b>1.1.3</b> Files after sequencing</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="introduction.html"><a href="introduction.html#dna-analysis"><i class="fa fa-check"></i><b>1.2</b> <strong>DNA analysis</strong></a>
+<ul>
+<li class="chapter" data-level="1.2.1" data-path="introduction.html"><a href="introduction.html#the-graham-cluster"><i class="fa fa-check"></i><b>1.2.1</b> The Graham cluster</a></li>
+<li class="chapter" data-level="1.2.2" data-path="introduction.html"><a href="introduction.html#data-accessibility"><i class="fa fa-check"></i><b>1.2.2</b> Data accessibility</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="compute-canada-basics.html"><a href="compute-canada-basics.html"><i class="fa fa-check"></i><b>2</b> <strong>COMPUTE CANADA BASICS</strong></a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="compute-canada-basics.html"><a href="compute-canada-basics.html#cluster-computing-basics"><i class="fa fa-check"></i><b>2.1</b> <strong>Cluster computing basics</strong></a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="compute-canada-basics.html"><a href="compute-canada-basics.html#signing-into-the-cluster"><i class="fa fa-check"></i><b>2.1.1</b> Signing into the cluster</a></li>
+<li class="chapter" data-level="2.1.2" data-path="compute-canada-basics.html"><a href="compute-canada-basics.html#basic-computing-commands"><i class="fa fa-check"></i><b>2.1.2</b> Basic computing commands</a></li>
+<li class="chapter" data-level="2.1.3" data-path="compute-canada-basics.html"><a href="compute-canada-basics.html#loading-modules"><i class="fa fa-check"></i><b>2.1.3</b> Loading modules</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="compute-canada-basics.html"><a href="compute-canada-basics.html#job-scripts"><i class="fa fa-check"></i><b>2.2</b> <strong>Job scripts </strong></a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="compute-canada-basics.html"><a href="compute-canada-basics.html#using-nano"><i class="fa fa-check"></i><b>2.2.1</b> Using Nano</a></li>
+<li class="chapter" data-level="2.2.2" data-path="compute-canada-basics.html"><a href="compute-canada-basics.html#writing-a-bash-script"><i class="fa fa-check"></i><b>2.2.2</b> Writing a bash script</a></li>
+<li class="chapter" data-level="2.2.3" data-path="compute-canada-basics.html"><a href="compute-canada-basics.html#running-scripts-on-the-scheduler"><i class="fa fa-check"></i><b>2.2.3</b> Running scripts on the scheduler</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="importing-data.html"><a href="importing-data.html"><i class="fa fa-check"></i><b>3</b> <strong>IMPORTING DATA</strong></a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="importing-data.html"><a href="importing-data.html#getting-organized"><i class="fa fa-check"></i><b>3.1</b> <strong>Getting organized</strong></a></li>
+<li class="chapter" data-level="3.2" data-path="importing-data.html"><a href="importing-data.html#moving-data-to-the-cluster"><i class="fa fa-check"></i><b>3.2</b> <strong>Moving data to the cluster</strong></a></li>
+<li class="chapter" data-level="3.3" data-path="importing-data.html"><a href="importing-data.html#organizing-.fastq-files"><i class="fa fa-check"></i><b>3.3</b> <strong>Organizing .FASTQ files</strong></a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="importing-data.html"><a href="importing-data.html#unzip-rawdata-files"><i class="fa fa-check"></i><b>3.3.1</b> Unzip rawdata files</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="qiime2-on-the-cluster.html"><a href="qiime2-on-the-cluster.html"><i class="fa fa-check"></i><b>4</b> <strong>QIIME2 ON THE CLUSTER</strong></a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="qiime2-on-the-cluster.html"><a href="qiime2-on-the-cluster.html#use-qiime2-via-apptainer"><i class="fa fa-check"></i><b>4.1</b> <strong>Use QIIME2 via Apptainer</strong></a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="qiime2-on-the-cluster.html"><a href="qiime2-on-the-cluster.html#finding-physical-paths"><i class="fa fa-check"></i><b>4.1.1</b> Finding physical paths</a></li>
+<li class="chapter" data-level="4.1.2" data-path="qiime2-on-the-cluster.html"><a href="qiime2-on-the-cluster.html#using-apptainer-mounts"><i class="fa fa-check"></i><b>4.1.2</b> Using Apptainer mounts</a></li>
+<li class="chapter" data-level="4.1.3" data-path="qiime2-on-the-cluster.html"><a href="qiime2-on-the-cluster.html#getting-help"><i class="fa fa-check"></i><b>4.1.3</b> Getting help</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="getting-started-with-qiime2.html"><a href="getting-started-with-qiime2.html"><i class="fa fa-check"></i><b>5</b> <strong>GETTING STARTED WITH QIIME2</strong></a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="getting-started-with-qiime2.html"><a href="getting-started-with-qiime2.html#creating-artifact-files"><i class="fa fa-check"></i><b>5.1</b> <strong>Creating artifact files</strong></a>
+<ul>
+<li class="chapter" data-level="5.1.1" data-path="getting-started-with-qiime2.html"><a href="getting-started-with-qiime2.html#import-the-.fastq-files"><i class="fa fa-check"></i><b>5.1.1</b> Import the .FASTQ files</a></li>
+<li class="chapter" data-level="5.1.2" data-path="getting-started-with-qiime2.html"><a href="getting-started-with-qiime2.html#inspect-the-.qza-files"><i class="fa fa-check"></i><b>5.1.2</b> Inspect the .QZA files</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="getting-started-with-qiime2.html"><a href="getting-started-with-qiime2.html#visualizing-artifact-files"><i class="fa fa-check"></i><b>5.2</b> <strong>Visualizing artifact files</strong></a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="getting-started-with-qiime2.html"><a href="getting-started-with-qiime2.html#create-a-summary-report"><i class="fa fa-check"></i><b>5.2.1</b> Create a summary report</a></li>
+<li class="chapter" data-level="5.2.2" data-path="getting-started-with-qiime2.html"><a href="getting-started-with-qiime2.html#using-qiime2s-web-app"><i class="fa fa-check"></i><b>5.2.2</b> Using QIIME2’s web-app</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="data-preprocessing.html"><a href="data-preprocessing.html"><i class="fa fa-check"></i><b>6</b> <strong>DATA PREPROCESSING</strong></a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="data-preprocessing.html"><a href="data-preprocessing.html#quality-assessment"><i class="fa fa-check"></i><b>6.1</b> <strong>Quality assessment</strong></a>
+<ul>
+<li class="chapter" data-level="6.1.1" data-path="data-preprocessing.html"><a href="data-preprocessing.html#fastqc"><i class="fa fa-check"></i><b>6.1.1</b> FastQC</a></li>
+<li class="chapter" data-level="6.1.2" data-path="data-preprocessing.html"><a href="data-preprocessing.html#multiqc"><i class="fa fa-check"></i><b>6.1.2</b> MultiQC</a></li>
+<li class="chapter" data-level="6.1.3" data-path="data-preprocessing.html"><a href="data-preprocessing.html#visualizing-data-quality"><i class="fa fa-check"></i><b>6.1.3</b> Visualizing data quality</a></li>
+<li class="chapter" data-level="6.1.4" data-path="data-preprocessing.html"><a href="data-preprocessing.html#plot-types"><i class="fa fa-check"></i><b>6.1.4</b> Plot types</a></li>
+<li class="chapter" data-level="6.1.5" data-path="data-preprocessing.html"><a href="data-preprocessing.html#for-this-study"><i class="fa fa-check"></i><b>6.1.5</b> For this study</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="data-preprocessing.html"><a href="data-preprocessing.html#data-cleaning"><i class="fa fa-check"></i><b>6.2</b> <strong>Data Cleaning</strong></a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="data-preprocessing.html"><a href="data-preprocessing.html#trimming-primers"><i class="fa fa-check"></i><b>6.2.1</b> Trimming primers</a></li>
+<li class="chapter" data-level="6.2.2" data-path="data-preprocessing.html"><a href="data-preprocessing.html#summarizing-data"><i class="fa fa-check"></i><b>6.2.2</b> Summarizing data</a></li>
+<li class="chapter" data-level="6.2.3" data-path="data-preprocessing.html"><a href="data-preprocessing.html#joining-read-pairs"><i class="fa fa-check"></i><b>6.2.3</b> Joining read pairs</a></li>
+<li class="chapter" data-level="6.2.4" data-path="data-preprocessing.html"><a href="data-preprocessing.html#quality-filtering"><i class="fa fa-check"></i><b>6.2.4</b> Quality filtering</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="data-preprocessing.html"><a href="data-preprocessing.html#data-transformation"><i class="fa fa-check"></i><b>6.3</b> <strong>Data transformation</strong></a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="data-preprocessing.html"><a href="data-preprocessing.html#constructing-asvs"><i class="fa fa-check"></i><b>6.3.1</b> Constructing ASV’s</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="data-preprocessing.html"><a href="data-preprocessing.html#data-reduction"><i class="fa fa-check"></i><b>6.4</b> <strong>Data reduction</strong></a>
+<ul>
+<li class="chapter" data-level="6.4.1" data-path="data-preprocessing.html"><a href="data-preprocessing.html#filtering-unique-reads"><i class="fa fa-check"></i><b>6.4.1</b> Filtering unique reads</a></li>
+</ul></li>
+<li class="chapter" data-level="6.5" data-path="data-preprocessing.html"><a href="data-preprocessing.html#manipulating-tables"><i class="fa fa-check"></i><b>6.5</b> <strong>Manipulating tables</strong></a>
+<ul>
+<li class="chapter" data-level="6.5.1" data-path="data-preprocessing.html"><a href="data-preprocessing.html#merging-feature-tables"><i class="fa fa-check"></i><b>6.5.1</b> Merging feature tables</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="diversity-analyses.html"><a href="diversity-analyses.html"><i class="fa fa-check"></i><b>7</b> <strong>DIVERSITY ANALYSES</strong></a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="diversity-analyses.html"><a href="diversity-analyses.html#build-a-phylogenetic-tree"><i class="fa fa-check"></i><b>7.1</b> <strong>Build a phylogenetic tree</strong></a></li>
+<li class="chapter" data-level="7.2" data-path="diversity-analyses.html"><a href="diversity-analyses.html#generating-alpha-rarefaction-curves"><i class="fa fa-check"></i><b>7.2</b> <strong>Generating alpha rarefaction curves</strong></a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="diversity-analyses.html"><a href="diversity-analyses.html#finding-max-depth"><i class="fa fa-check"></i><b>7.2.1</b> Finding max depth</a></li>
+<li class="chapter" data-level="7.2.2" data-path="diversity-analyses.html"><a href="diversity-analyses.html#generating-the-curve"><i class="fa fa-check"></i><b>7.2.2</b> Generating the curve</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="diversity-analyses.html"><a href="diversity-analyses.html#alpha-and-beta-diversity"><i class="fa fa-check"></i><b>7.3</b> <strong>Alpha and beta diversity</strong></a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="diversity-analyses.html"><a href="diversity-analyses.html#running-diversity-analyses"><i class="fa fa-check"></i><b>7.3.1</b> Running diversity analyses</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="assigning-taxonomy.html"><a href="assigning-taxonomy.html"><i class="fa fa-check"></i><b>8</b> <strong>ASSIGNING TAXONOMY</strong></a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="assigning-taxonomy.html"><a href="assigning-taxonomy.html#classifying-asvs"><i class="fa fa-check"></i><b>8.1</b> <strong>Classifying ASV’s</strong></a>
+<ul>
+<li class="chapter" data-level="8.1.1" data-path="assigning-taxonomy.html"><a href="assigning-taxonomy.html#using-scikit-learn"><i class="fa fa-check"></i><b>8.1.1</b> Using scikit-learn</a></li>
+</ul></li>
+<li class="chapter" data-level="8.2" data-path="assigning-taxonomy.html"><a href="assigning-taxonomy.html#verifying-with-blastn"><i class="fa fa-check"></i><b>8.2</b> <strong>Verifying with BLASTn</strong></a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="assigning-taxonomy.html"><a href="assigning-taxonomy.html#filtering-contaminants"><i class="fa fa-check"></i><b>8.2.1</b> Filtering contaminants</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="assigning-taxonomy.html"><a href="assigning-taxonomy.html#grouping-feature-tables"><i class="fa fa-check"></i><b>8.3</b> <strong>Grouping feature tables</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="visualizing-taxonomic-data.html"><a href="visualizing-taxonomic-data.html"><i class="fa fa-check"></i><b>9</b> <strong>VISUALIZING TAXONOMIC DATA</strong></a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="visualizing-taxonomic-data.html"><a href="visualizing-taxonomic-data.html#exporting-data"><i class="fa fa-check"></i><b>9.1</b> <strong>Exporting data</strong></a></li>
+<li class="chapter" data-level="9.2" data-path="visualizing-taxonomic-data.html"><a href="visualizing-taxonomic-data.html#importing-q2-files-to-r"><i class="fa fa-check"></i><b>9.2</b> <strong>Importing Q2 files to R</strong></a></li>
+<li class="chapter" data-level="9.3" data-path="visualizing-taxonomic-data.html"><a href="visualizing-taxonomic-data.html#qiime2r"><i class="fa fa-check"></i><b>9.3</b> <strong>QIIME2R</strong></a>
+<ul>
+<li class="chapter" data-level="9.3.1" data-path="visualizing-taxonomic-data.html"><a href="visualizing-taxonomic-data.html#load-the-feature-table"><i class="fa fa-check"></i><b>9.3.1</b> Load the feature table</a></li>
+<li class="chapter" data-level="9.3.2" data-path="visualizing-taxonomic-data.html"><a href="visualizing-taxonomic-data.html#load-the-metadata"><i class="fa fa-check"></i><b>9.3.2</b> Load the metadata</a></li>
+<li class="chapter" data-level="9.3.3" data-path="visualizing-taxonomic-data.html"><a href="visualizing-taxonomic-data.html#load-the-taxonomic-data"><i class="fa fa-check"></i><b>9.3.3</b> Load the taxonomic data</a></li>
+<li class="chapter" data-level="9.3.4" data-path="visualizing-taxonomic-data.html"><a href="visualizing-taxonomic-data.html#parsing-taxonomic-data"><i class="fa fa-check"></i><b>9.3.4</b> Parsing taxonomic data</a></li>
+<li class="chapter" data-level="9.3.5" data-path="visualizing-taxonomic-data.html"><a href="visualizing-taxonomic-data.html#create-a-taxa-barplot"><i class="fa fa-check"></i><b>9.3.5</b> Create a taxa barplot</a></li>
+<li class="chapter" data-level="9.3.6" data-path="visualizing-taxonomic-data.html"><a href="visualizing-taxonomic-data.html#create-a-taxa-heatmap"><i class="fa fa-check"></i><b>9.3.6</b> Create a taxa heatmap</a></li>
+<li class="chapter" data-level="9.3.7" data-path="visualizing-taxonomic-data.html"><a href="visualizing-taxonomic-data.html#plot-beta-diversity"><i class="fa fa-check"></i><b>9.3.7</b> Plot beta-diversity</a></li>
+</ul></li>
+<li class="chapter" data-level="9.4" data-path="visualizing-taxonomic-data.html"><a href="visualizing-taxonomic-data.html#phyloseq"><i class="fa fa-check"></i><b>9.4</b> <strong>Phyloseq</strong></a>
+<ul>
+<li class="chapter" data-level="9.4.1" data-path="visualizing-taxonomic-data.html"><a href="visualizing-taxonomic-data.html#build-a-phyloseq-object"><i class="fa fa-check"></i><b>9.4.1</b> Build a phyloseq object</a></li>
+<li class="chapter" data-level="9.4.2" data-path="visualizing-taxonomic-data.html"><a href="visualizing-taxonomic-data.html#taxonomic-characteristics"><i class="fa fa-check"></i><b>9.4.2</b> Taxonomic characteristics</a></li>
+<li class="chapter" data-level="9.4.3" data-path="visualizing-taxonomic-data.html"><a href="visualizing-taxonomic-data.html#plot-alpha-diversity"><i class="fa fa-check"></i><b>9.4.3</b> Plot alpha-diversity</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="resources.html"><a href="resources.html"><i class="fa fa-check"></i><b>10</b> <strong>Resources:</strong></a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="resources.html"><a href="resources.html#data-in-this-analysis"><i class="fa fa-check"></i><b>10.1</b> <strong>Data in this analysis</strong></a></li>
+<li class="chapter" data-level="10.2" data-path="resources.html"><a href="resources.html#other-resources"><i class="fa fa-check"></i><b>10.2</b> <strong>Other resources</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="acknowledgments.html"><a href="acknowledgments.html"><i class="fa fa-check"></i><b>11</b> Acknowledgments</a></li>
+<li class="chapter" data-level="12" data-path="technical-support.html"><a href="technical-support.html"><i class="fa fa-check"></i><b>12</b> <strong>Technical Support</strong></a></li>
+<li class="chapter" data-level="13" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>13</b> <strong>References</strong></a>
+<ul>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html#references-1"><i class="fa fa-check"></i><strong>References</strong></a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">16S Microbiome Analysis on a Computing Cluster</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="data-preprocessing" class="section level1 hasAnchor" number="6">
+<h1><span class="header-section-number">6</span> <strong>DATA PREPROCESSING</strong><a href="data-preprocessing.html#data-preprocessing" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Before conducting any further analysis such as assigning taxonomy to read files, it is important to conduct a few pre-processing steps on your files to clean up the data.</p>
+<p>Here are the 4 basic data pre-processing steps to follow:
+1 - Data quality assessment
+2 - Data cleaning
+3 - Data transformation
+4 - Data reduction</p>
+<div id="quality-assessment" class="section level2 hasAnchor" number="6.1">
+<h2><span class="header-section-number">6.1</span> <strong>Quality assessment</strong><a href="data-preprocessing.html#quality-assessment" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Inspecting the quality of the .FASTQ files is very important. You must inspect the quality of your data (phred score, number of unique to duplicate reads per file, number of total reads, GC content, etc.) before running any analysis so you can consider the data quality throughout all aspects of the analysis. If you want to inspect data sets that contain multiple samples, Fit’s nice to be able to review all the samples together - this also makes it easier to understand what methods may or may not be working for sequencing/library prep. Here, we use 2 tools for quality checking multiple samples at once:</p>
+<ul>
+<li><p>FastQC [6] to inspect the read quality of each sample file individually (R1 and R2)</p></li>
+<li><p>MultiQC [7] to visualize data quality for all the samples together</p></li>
+</ul>
+<div id="fastqc" class="section level3 hasAnchor" number="6.1.1">
+<h3><span class="header-section-number">6.1.1</span> FastQC<a href="data-preprocessing.html#fastqc" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>First, inspect the read quality of each sample individually. Here I separated the quality check for seabird fecal samples and sediment samples. Create a directory in both <code>/rawdata/birds</code> and <code>rawdata/sediments</code> called <code>fastqc_out</code></p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="data-preprocessing.html#cb34-1" tabindex="-1"></a><span class="co"># navigate to the main directory </span></span>
+<span id="cb34-2"><a href="data-preprocessing.html#cb34-2" tabindex="-1"></a>mkdir rawdata<span class="sc">/</span>birds<span class="sc">/</span>fastqc_out</span>
+<span id="cb34-3"><a href="data-preprocessing.html#cb34-3" tabindex="-1"></a>mkdir rawdata<span class="sc">/</span>sediments<span class="sc">/</span>fastqc_out</span></code></pre></div>
+<p>Run the fastqc command by opening nano and writing a script:</p>
+<p><strong>NOTE:</strong> make sure to use the newest version of the fastqc module (in this case v0.11.9). Use <code>module spider fastqc</code> to view available versions.</p>
+<p>[copy and paste the following batch script into nano and then edit accordingly]</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="data-preprocessing.html#cb35-1" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb35-2"><a href="data-preprocessing.html#cb35-2" tabindex="-1"></a><span class="co">#SBATCH --time=</span></span>
+<span id="cb35-3"><a href="data-preprocessing.html#cb35-3" tabindex="-1"></a><span class="co">#SBATCH --account=&lt;group-name&gt;</span></span>
+<span id="cb35-4"><a href="data-preprocessing.html#cb35-4" tabindex="-1"></a><span class="co">#SBATCH --mem=</span></span>
+<span id="cb35-5"><a href="data-preprocessing.html#cb35-5" tabindex="-1"></a></span>
+<span id="cb35-6"><a href="data-preprocessing.html#cb35-6" tabindex="-1"></a>module load StdEnv<span class="sc">/</span><span class="dv">2020</span> fastqc<span class="sc">/</span><span class="dv">0</span>.<span class="fl">11.9</span></span>
+<span id="cb35-7"><a href="data-preprocessing.html#cb35-7" tabindex="-1"></a></span>
+<span id="cb35-8"><a href="data-preprocessing.html#cb35-8" tabindex="-1"></a><span class="co">#run the quality check on bird samples</span></span>
+<span id="cb35-9"><a href="data-preprocessing.html#cb35-9" tabindex="-1"></a>fastqc rawdata<span class="sc">/</span>birds<span class="sc">/</span><span class="er">*</span>.fastq.gz rawdata<span class="sc">/</span>birds<span class="sc">/</span>fastqc_out</span>
+<span id="cb35-10"><a href="data-preprocessing.html#cb35-10" tabindex="-1"></a></span>
+<span id="cb35-11"><a href="data-preprocessing.html#cb35-11" tabindex="-1"></a><span class="co">#run the quality check on sediment samples</span></span>
+<span id="cb35-12"><a href="data-preprocessing.html#cb35-12" tabindex="-1"></a>fastqc rawdata<span class="sc">/</span>sediments<span class="sc">/</span><span class="er">*</span>.fastq.gz rawdata<span class="sc">/</span>sediments<span class="sc">/</span>fastqc_out</span></code></pre></div>
+<p>Save the script as <code>fastqc.sh</code> and run the job script using the sbatch command:</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="data-preprocessing.html#cb36-1" tabindex="-1"></a>sbatch fastqc.sh</span>
+<span id="cb36-2"><a href="data-preprocessing.html#cb36-2" tabindex="-1"></a></span>
+<span id="cb36-3"><a href="data-preprocessing.html#cb36-3" tabindex="-1"></a><span class="co"># view the output of the job</span></span>
+<span id="cb36-4"><a href="data-preprocessing.html#cb36-4" tabindex="-1"></a>view slurm<span class="sc">-</span><span class="st">&#39;jobID&#39;</span></span>
+<span id="cb36-5"><a href="data-preprocessing.html#cb36-5" tabindex="-1"></a></span>
+<span id="cb36-6"><a href="data-preprocessing.html#cb36-6" tabindex="-1"></a><span class="co"># view the files in the new directories</span></span>
+<span id="cb36-7"><a href="data-preprocessing.html#cb36-7" tabindex="-1"></a>ls rawdata<span class="sc">/</span>birds<span class="sc">/</span>fastqc_out</span>
+<span id="cb36-8"><a href="data-preprocessing.html#cb36-8" tabindex="-1"></a>ls rawdata<span class="sc">/</span>sediments<span class="sc">/</span>fastqc_out</span></code></pre></div>
+<p><strong>NOTE</strong>: When you finish running a job, and have looked at the output slurm file to verify that the command performed well, then you can delete the slurm file using the <code>rm slurm*</code> command. Otherwise your slurm files will build up over time and it will be confusing!</p>
+</div>
+<div id="multiqc" class="section level3 hasAnchor" number="6.1.2">
+<h3><span class="header-section-number">6.1.2</span> MultiQC<a href="data-preprocessing.html#multiqc" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Next, I inspected read quality of all the samples together using the following MultiQC commands on both birds and sediments. I specified the output to the file with the <code>-o</code> argument, to the <code>rawdata/birds</code> and <code>rawdata/sediments</code> directories. To install MultiQC load python and load a virtual environment within your job script, like this:</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="data-preprocessing.html#cb37-1" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb37-2"><a href="data-preprocessing.html#cb37-2" tabindex="-1"></a><span class="co">#SBATCH --time=</span></span>
+<span id="cb37-3"><a href="data-preprocessing.html#cb37-3" tabindex="-1"></a><span class="co">#SBATCH --account=&lt;group-name&gt;</span></span>
+<span id="cb37-4"><a href="data-preprocessing.html#cb37-4" tabindex="-1"></a><span class="co">#SBATCH --mem=</span></span>
+<span id="cb37-5"><a href="data-preprocessing.html#cb37-5" tabindex="-1"></a></span>
+<span id="cb37-6"><a href="data-preprocessing.html#cb37-6" tabindex="-1"></a>module load python</span>
+<span id="cb37-7"><a href="data-preprocessing.html#cb37-7" tabindex="-1"></a></span>
+<span id="cb37-8"><a href="data-preprocessing.html#cb37-8" tabindex="-1"></a><span class="co"># load a virtual environment</span></span>
+<span id="cb37-9"><a href="data-preprocessing.html#cb37-9" tabindex="-1"></a>virtualenv <span class="sc">~</span><span class="er">/</span>my_venv</span>
+<span id="cb37-10"><a href="data-preprocessing.html#cb37-10" tabindex="-1"></a>source <span class="sc">~</span><span class="er">/</span>my_venv<span class="sc">/</span>bin<span class="sc">/</span>activate</span>
+<span id="cb37-11"><a href="data-preprocessing.html#cb37-11" tabindex="-1"></a></span>
+<span id="cb37-12"><a href="data-preprocessing.html#cb37-12" tabindex="-1"></a><span class="co"># use pip to install MultiQC</span></span>
+<span id="cb37-13"><a href="data-preprocessing.html#cb37-13" tabindex="-1"></a>pip install <span class="sc">--</span>no<span class="sc">-</span>index multiqc</span>
+<span id="cb37-14"><a href="data-preprocessing.html#cb37-14" tabindex="-1"></a></span>
+<span id="cb37-15"><a href="data-preprocessing.html#cb37-15" tabindex="-1"></a><span class="co"># run the MultiQC commands</span></span>
+<span id="cb37-16"><a href="data-preprocessing.html#cb37-16" tabindex="-1"></a>multiqc rawdata<span class="sc">/</span>birds<span class="sc">/</span>fastqc_out<span class="sc">/</span> <span class="sc">-</span>o rawdata<span class="sc">/</span>birds<span class="sc">/</span></span>
+<span id="cb37-17"><a href="data-preprocessing.html#cb37-17" tabindex="-1"></a>multiqc rawdata<span class="sc">/</span>sediments<span class="sc">/</span>fastqc_out<span class="sc">/</span> <span class="sc">-</span>o rawdata<span class="sc">/</span>sediments</span></code></pre></div>
+<p>Save the script as ‘multiqc.sh’, and run it using the sbatch command:</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="data-preprocessing.html#cb38-1" tabindex="-1"></a>sbatch multiqc.sh</span>
+<span id="cb38-2"><a href="data-preprocessing.html#cb38-2" tabindex="-1"></a></span>
+<span id="cb38-3"><a href="data-preprocessing.html#cb38-3" tabindex="-1"></a><span class="co"># check to make sure the multiqc files were generated properly</span></span>
+<span id="cb38-4"><a href="data-preprocessing.html#cb38-4" tabindex="-1"></a>ls rawdata<span class="sc">/</span>birds<span class="sc">/</span>fastqc_out</span>
+<span id="cb38-5"><a href="data-preprocessing.html#cb38-5" tabindex="-1"></a>ls rawdata<span class="sc">/</span>sediments<span class="sc">/</span>fastqc_out</span></code></pre></div>
+<p>A <code>multiqc_data</code> directory and <code>multiqc_report.html</code> will be created when running this command. At this point, the HTML version of the MultiQC report can be exported onto a local computer using SFTP to visualize the quality of the data on a web browser.</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="data-preprocessing.html#cb39-1" tabindex="-1"></a><span class="co"># exit the cluster and re-enter through the sftp</span></span>
+<span id="cb39-2"><a href="data-preprocessing.html#cb39-2" tabindex="-1"></a>exit</span>
+<span id="cb39-3"><a href="data-preprocessing.html#cb39-3" tabindex="-1"></a>sftp <span class="st">&#39;username&#39;</span><span class="sc">@</span>graham.computecanada.ca</span>
+<span id="cb39-4"><a href="data-preprocessing.html#cb39-4" tabindex="-1"></a></span>
+<span id="cb39-5"><a href="data-preprocessing.html#cb39-5" tabindex="-1"></a><span class="co">#move to a file on your local directory where you want to keep the quality data files </span></span>
+<span id="cb39-6"><a href="data-preprocessing.html#cb39-6" tabindex="-1"></a>lcd Desktop<span class="sc">/</span></span>
+<span id="cb39-7"><a href="data-preprocessing.html#cb39-7" tabindex="-1"></a></span>
+<span id="cb39-8"><a href="data-preprocessing.html#cb39-8" tabindex="-1"></a><span class="co">#get the files from the **amplicon-analysis/rawdata** directory, name them accordingly</span></span>
+<span id="cb39-9"><a href="data-preprocessing.html#cb39-9" tabindex="-1"></a>get amplicon<span class="sc">-</span>analysis<span class="sc">/</span>rawdata<span class="sc">/</span>birds<span class="sc">/</span>fastqc_out<span class="sc">/</span>multiqc_report.html multiqc_report_birds.html</span>
+<span id="cb39-10"><a href="data-preprocessing.html#cb39-10" tabindex="-1"></a>get amplicon<span class="sc">-</span>data<span class="sc">/</span>rawdata<span class="sc">/</span>sediments<span class="sc">/</span>fastqc_out<span class="sc">/</span>multiqc_report.html multiqc_report_sediments.html</span></code></pre></div>
+<p>Exit SFTP and proceed to visualizing the quality of your data</p>
+</div>
+<div id="visualizing-data-quality" class="section level3 hasAnchor" number="6.1.3">
+<h3><span class="header-section-number">6.1.3</span> Visualizing data quality<a href="data-preprocessing.html#visualizing-data-quality" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Navigate to the files on your local computer and open the data files via your chosen web browser.</p>
+</div>
+<div id="plot-types" class="section level3 hasAnchor" number="6.1.4">
+<h3><span class="header-section-number">6.1.4</span> Plot types<a href="data-preprocessing.html#plot-types" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>MultiQC report files contain several different ways of interpreting data quality, including plots for. To view some helpful interpretations of these plots, visit ()[].</p>
+</div>
+<div id="for-this-study" class="section level3 hasAnchor" number="6.1.5">
+<h3><span class="header-section-number">6.1.5</span> For this study<a href="data-preprocessing.html#for-this-study" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We pulled 2 important files from the cluster onto our local computer, the <code>multiqc_report_sediments.html</code> and <code>multiqc_report_birds.html</code>.</p>
+<p>The quality of the data used in this analysis is reviewed in Bosch <strong>[1]</strong>, but there are a few things to keep in mind:</p>
+<ul>
+<li><p>Overall these samples have a decent quality, as exhibited by Phred scores in the <strong>Mean Quality Scores</strong> plot, which shows that most of the R2 files are above 20 up to approx. 240 bp. Keep this information in mind when trimming the read files later on based on sequence quality.</p></li>
+<li><p>There is a high percentage of duplicate reads across both sediment and bird samples, which is something to keep in mind for downstream analysis. This can usually be cleaned up by removing contaminants, filtering ASVs and rarefying the data for certain diversity analyses.</p></li>
+<li><p>GC content for these data should be between 40 - 60%, here it hovers around 50 - 55% between samples</p></li>
+</ul>
+</div>
+</div>
+<div id="data-cleaning" class="section level2 hasAnchor" number="6.2">
+<h2><span class="header-section-number">6.2</span> <strong>Data Cleaning</strong><a href="data-preprocessing.html#data-cleaning" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Once the sequencing data was imported to an artifact file, all the primer sequences (and all the reads without primer sequences) can be removed from reads corresponding to the <em>16S</em> V4/V5 regions (Forward:GTGYCAGCMGCCGCGGTAA, Reverse: CCGYCAATTYMTTTRAGTTT) using the q2-cutadapt plug-in [8].</p>
+<div id="trimming-primers" class="section level3 hasAnchor" number="6.2.1">
+<h3><span class="header-section-number">6.2.1</span> Trimming primers<a href="data-preprocessing.html#trimming-primers" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The QIIME2 cut-adapt plug-in <strong>[8]</strong> allows you to work with the adapter sequences within your files. To begin, make sure you’re logged back in to the cluster and in the main directory (<code>/amplicon-analysis</code>). Copy and paste the job script to nano and call it <code>trimming_birds.sh</code>:</p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="data-preprocessing.html#cb40-1" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb40-2"><a href="data-preprocessing.html#cb40-2" tabindex="-1"></a><span class="co">#SBATCH --time=</span></span>
+<span id="cb40-3"><a href="data-preprocessing.html#cb40-3" tabindex="-1"></a><span class="co">#SBATCH --account=&lt;group-ID&gt;</span></span>
+<span id="cb40-4"><a href="data-preprocessing.html#cb40-4" tabindex="-1"></a><span class="co">#SBATCH --mem=</span></span>
+<span id="cb40-5"><a href="data-preprocessing.html#cb40-5" tabindex="-1"></a></span>
+<span id="cb40-6"><a href="data-preprocessing.html#cb40-6" tabindex="-1"></a>export APPTAINER_BIND<span class="ot">=</span><span class="er">/</span>project<span class="sc">/</span><span class="dv">6011879</span><span class="sc">/</span><span class="er">&lt;</span>user<span class="sc">-</span>ID<span class="sc">&gt;</span><span class="er">/:/</span>data</span>
+<span id="cb40-7"><a href="data-preprocessing.html#cb40-7" tabindex="-1"></a>export APPTAINER_WORKDIR<span class="ot">=</span><span class="er">$</span>{SLURM_TMPDIR}</span>
+<span id="cb40-8"><a href="data-preprocessing.html#cb40-8" tabindex="-1"></a></span>
+<span id="cb40-9"><a href="data-preprocessing.html#cb40-9" tabindex="-1"></a>module load qiime2<span class="sc">/</span><span class="fl">2023.5</span></span>
+<span id="cb40-10"><a href="data-preprocessing.html#cb40-10" tabindex="-1"></a></span>
+<span id="cb40-11"><a href="data-preprocessing.html#cb40-11" tabindex="-1"></a><span class="co"># run the cutadapt command to trim primers from all bird sample reads</span></span>
+<span id="cb40-12"><a href="data-preprocessing.html#cb40-12" tabindex="-1"></a></span>
+<span id="cb40-13"><a href="data-preprocessing.html#cb40-13" tabindex="-1"></a>qiime cutadapt trim<span class="sc">-</span>paired \</span>
+<span id="cb40-14"><a href="data-preprocessing.html#cb40-14" tabindex="-1"></a> <span class="sc">--</span>i<span class="sc">-</span>demultiplexed<span class="sc">-</span>sequences <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>PEreads_birds.qza \</span>
+<span id="cb40-15"><a href="data-preprocessing.html#cb40-15" tabindex="-1"></a> <span class="sc">--</span>p<span class="sc">-</span>front<span class="sc">-</span>f GTGYCAGCMGCCGCGGTAA \</span>
+<span id="cb40-16"><a href="data-preprocessing.html#cb40-16" tabindex="-1"></a> <span class="sc">--</span>p<span class="sc">-</span>front<span class="sc">-</span>r CCGYCAATTYMTTTRAGTTT \</span>
+<span id="cb40-17"><a href="data-preprocessing.html#cb40-17" tabindex="-1"></a> <span class="sc">--</span>p<span class="sc">-</span>discard<span class="sc">-</span>untrimmed \</span>
+<span id="cb40-18"><a href="data-preprocessing.html#cb40-18" tabindex="-1"></a> <span class="sc">--</span>p<span class="sc">-</span>no<span class="sc">-</span>indels \</span>
+<span id="cb40-19"><a href="data-preprocessing.html#cb40-19" tabindex="-1"></a> <span class="sc">--</span>o<span class="sc">-</span>trimmed<span class="sc">-</span>sequences <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>trimmed<span class="sc">-</span>reads_birds.qza</span>
+<span id="cb40-20"><a href="data-preprocessing.html#cb40-20" tabindex="-1"></a></span>
+<span id="cb40-21"><a href="data-preprocessing.html#cb40-21" tabindex="-1"></a><span class="co"># generate a summary report to see how many reads were lost</span></span>
+<span id="cb40-22"><a href="data-preprocessing.html#cb40-22" tabindex="-1"></a>qiime demux summarize \</span>
+<span id="cb40-23"><a href="data-preprocessing.html#cb40-23" tabindex="-1"></a> <span class="sc">--</span>i<span class="sc">-</span>data <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>trimmed<span class="sc">-</span>reads_birds.qza \</span>
+<span id="cb40-24"><a href="data-preprocessing.html#cb40-24" tabindex="-1"></a> <span class="sc">--</span>o<span class="sc">-</span>visualization <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>summaries<span class="sc">/</span>cutadapt_birds.qzv</span></code></pre></div>
+<p>Here is a review of some of the parameters (<code>--p</code>) I used:</p>
+<ul>
+<li><p><code>--p-front-f GTGYCAGCMGCCGCGGTAA</code>: a parameter flag that specifies the forward primer sequence used for trimming, <code>GTGYCAGCMGCCGCGGTAA</code>. These should be specified on the information provided by the type of primer used.</p></li>
+<li><p><code>--p-front-r CCGYCAATTYMTTTRAGTTT</code>: specifies the reverse primer sequence used for trimming, <code>CCGYCAATTYMTTTRAGTTT</code>.</p></li>
+<li><p><code>--p-discard-untrimmed</code>: indicates that any sequences that are not trimmed (i.e., no matching primer sequences found) should be discarded.</p></li>
+<li><p><code>--p-no-indels</code>: indicates that the trimming should not allow for insertions or deletions (indels) during the trimming process, meaning the primers must match exactly without any additional or missing bases.</p></li>
+</ul>
+<p>Now run the same commands for the sediment samples and call the nano script <code>trimming_sediments.sh</code>:</p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="data-preprocessing.html#cb41-1" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb41-2"><a href="data-preprocessing.html#cb41-2" tabindex="-1"></a><span class="co">#SBATCH --time=</span></span>
+<span id="cb41-3"><a href="data-preprocessing.html#cb41-3" tabindex="-1"></a><span class="co">#SBATCH --account=&lt;group-ID&gt;</span></span>
+<span id="cb41-4"><a href="data-preprocessing.html#cb41-4" tabindex="-1"></a><span class="co">#SBATCH --mem=</span></span>
+<span id="cb41-5"><a href="data-preprocessing.html#cb41-5" tabindex="-1"></a></span>
+<span id="cb41-6"><a href="data-preprocessing.html#cb41-6" tabindex="-1"></a>export APPTAINER_BIND<span class="ot">=</span><span class="er">/</span>project<span class="sc">/</span><span class="dv">6011879</span><span class="sc">/</span><span class="er">&lt;</span>user<span class="sc">-</span>ID<span class="sc">&gt;</span><span class="er">/:/</span>data</span>
+<span id="cb41-7"><a href="data-preprocessing.html#cb41-7" tabindex="-1"></a>export APPTAINER_WORKDIR<span class="ot">=</span><span class="er">$</span>{SLURM_TMPDIR}</span>
+<span id="cb41-8"><a href="data-preprocessing.html#cb41-8" tabindex="-1"></a></span>
+<span id="cb41-9"><a href="data-preprocessing.html#cb41-9" tabindex="-1"></a>module load qiime2<span class="sc">/</span><span class="fl">2023.5</span></span>
+<span id="cb41-10"><a href="data-preprocessing.html#cb41-10" tabindex="-1"></a></span>
+<span id="cb41-11"><a href="data-preprocessing.html#cb41-11" tabindex="-1"></a>qiime cutadapt trim<span class="sc">-</span>paired \</span>
+<span id="cb41-12"><a href="data-preprocessing.html#cb41-12" tabindex="-1"></a> <span class="sc">--</span>i<span class="sc">-</span>demultiplexed<span class="sc">-</span>sequences <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>PEreads_sediments.qza \</span>
+<span id="cb41-13"><a href="data-preprocessing.html#cb41-13" tabindex="-1"></a> <span class="sc">--</span>p<span class="sc">-</span>front<span class="sc">-</span>f GTGYCAGCMGCCGCGGTAA \</span>
+<span id="cb41-14"><a href="data-preprocessing.html#cb41-14" tabindex="-1"></a> <span class="sc">--</span>p<span class="sc">-</span>front<span class="sc">-</span>r CCGYCAATTYMTTTRAGTTT \</span>
+<span id="cb41-15"><a href="data-preprocessing.html#cb41-15" tabindex="-1"></a> <span class="sc">--</span>p<span class="sc">-</span>discard<span class="sc">-</span>untrimmed \</span>
+<span id="cb41-16"><a href="data-preprocessing.html#cb41-16" tabindex="-1"></a> <span class="sc">--</span>p<span class="sc">-</span>no<span class="sc">-</span>indels \</span>
+<span id="cb41-17"><a href="data-preprocessing.html#cb41-17" tabindex="-1"></a> <span class="sc">--</span>o<span class="sc">-</span>trimmed<span class="sc">-</span>sequences <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>trimmed<span class="sc">-</span>reads_sediments.qza</span>
+<span id="cb41-18"><a href="data-preprocessing.html#cb41-18" tabindex="-1"></a></span>
+<span id="cb41-19"><a href="data-preprocessing.html#cb41-19" tabindex="-1"></a>qiime demux summarize \</span>
+<span id="cb41-20"><a href="data-preprocessing.html#cb41-20" tabindex="-1"></a> <span class="sc">--</span>i<span class="sc">-</span>data <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>trimmed<span class="sc">-</span>reads_sediments.qza \</span>
+<span id="cb41-21"><a href="data-preprocessing.html#cb41-21" tabindex="-1"></a> <span class="sc">--</span>o<span class="sc">-</span>visualization <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>summaries<span class="sc">/</span>cutadapt_sediments.qzv</span></code></pre></div>
+<p>Next, I saved and ran the scripts using <code>sbatch</code> and checked the slurm file when the job was complete</p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="data-preprocessing.html#cb42-1" tabindex="-1"></a>sbatch trimming_birds.sh</span>
+<span id="cb42-2"><a href="data-preprocessing.html#cb42-2" tabindex="-1"></a>sbatch trimming_sediments.sh</span>
+<span id="cb42-3"><a href="data-preprocessing.html#cb42-3" tabindex="-1"></a></span>
+<span id="cb42-4"><a href="data-preprocessing.html#cb42-4" tabindex="-1"></a><span class="co">#check the 2 slurm files that were produced after a few minutes</span></span>
+<span id="cb42-5"><a href="data-preprocessing.html#cb42-5" tabindex="-1"></a>view slurm<span class="sc">-</span><span class="er">&lt;</span><span class="st">&quot;JOB-ID&quot;</span><span class="sc">&gt;</span></span></code></pre></div>
+<p><strong>TIP:</strong> To view explanations for each option of the <code>cutadapt</code> command or view other options run the help command for cutadapt (or for other tools in the future):</p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="data-preprocessing.html#cb43-1" tabindex="-1"></a>qiime cutadapt <span class="sc">--</span>help</span></code></pre></div>
+</div>
+<div id="summarizing-data" class="section level3 hasAnchor" number="6.2.2">
+<h3><span class="header-section-number">6.2.2</span> Summarizing data<a href="data-preprocessing.html#summarizing-data" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>At this point, exit the cluster and re-enter using the SFTP to move the .QZV files that were just created from the Graham cluster to our local computer. Drag and drop the file onto <a href="https://view.qiime2.org/" class="uri">https://view.qiime2.org/</a> to view an interactive quality plot and a table of sequence details.</p>
+<p><strong>REVIEW WHAT THE QIIME PAGE LOOKS LIKE</strong>
+It’s good to make sure there was not an unordinary amount of reads lost as this stage and at the next stages when joining the reads, constructing ASVs and filtering ASVs.</p>
+</div>
+<div id="joining-read-pairs" class="section level3 hasAnchor" number="6.2.3">
+<h3><span class="header-section-number">6.2.3</span> Joining read pairs<a href="data-preprocessing.html#joining-read-pairs" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Since we are working with paired-end data, it’s important to join the read pairs before assigning taxonomy. We can use a merging command offered by the q2-vsearch plug-in <strong>[9]</strong>, which also provides methods for clustering and dereplicating features and sequences. The <code>merge-pairs</code> command can be run to join the R1 and R2 read pairs for each sample. Here, I just incorporated the <code>qiime demux summarize</code> command into the job script.</p>
+<p>Open nano and use this <code>joining.sh</code> script to join pairs:</p>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="data-preprocessing.html#cb44-1" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb44-2"><a href="data-preprocessing.html#cb44-2" tabindex="-1"></a><span class="co">#SBATCH --time=</span></span>
+<span id="cb44-3"><a href="data-preprocessing.html#cb44-3" tabindex="-1"></a><span class="co">#SBATCH --account=&lt;group-ID&gt;</span></span>
+<span id="cb44-4"><a href="data-preprocessing.html#cb44-4" tabindex="-1"></a><span class="co">#SBATCH --mem=</span></span>
+<span id="cb44-5"><a href="data-preprocessing.html#cb44-5" tabindex="-1"></a></span>
+<span id="cb44-6"><a href="data-preprocessing.html#cb44-6" tabindex="-1"></a>export APPTAINER_BIND<span class="ot">=</span><span class="er">/</span>project<span class="sc">/</span><span class="dv">6011879</span><span class="sc">/</span><span class="er">&lt;</span>user<span class="sc">-</span>ID<span class="sc">&gt;</span><span class="er">/:/</span>data</span>
+<span id="cb44-7"><a href="data-preprocessing.html#cb44-7" tabindex="-1"></a>export APPTAINER_WORKDIR<span class="ot">=</span><span class="er">$</span>{SLURM_TMPDIR}</span>
+<span id="cb44-8"><a href="data-preprocessing.html#cb44-8" tabindex="-1"></a></span>
+<span id="cb44-9"><a href="data-preprocessing.html#cb44-9" tabindex="-1"></a>module load qiime2<span class="sc">/</span><span class="fl">2023.5</span></span>
+<span id="cb44-10"><a href="data-preprocessing.html#cb44-10" tabindex="-1"></a></span>
+<span id="cb44-11"><a href="data-preprocessing.html#cb44-11" tabindex="-1"></a><span class="co"># commands for joining reads of all bird samples</span></span>
+<span id="cb44-12"><a href="data-preprocessing.html#cb44-12" tabindex="-1"></a>qiime vsearch merge<span class="sc">-</span>pairs  \</span>
+<span id="cb44-13"><a href="data-preprocessing.html#cb44-13" tabindex="-1"></a> <span class="sc">--</span>i<span class="sc">-</span>demultiplexed<span class="sc">-</span>seqs <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>trimmed<span class="sc">-</span>reads_birds.qza \</span>
+<span id="cb44-14"><a href="data-preprocessing.html#cb44-14" tabindex="-1"></a> <span class="sc">--</span>o<span class="sc">-</span>joined<span class="sc">-</span>sequences <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>joined<span class="sc">-</span>reads_birds.qza</span>
+<span id="cb44-15"><a href="data-preprocessing.html#cb44-15" tabindex="-1"></a></span>
+<span id="cb44-16"><a href="data-preprocessing.html#cb44-16" tabindex="-1"></a><span class="co">#use the demux command to generate a summary report for the joining</span></span>
+<span id="cb44-17"><a href="data-preprocessing.html#cb44-17" tabindex="-1"></a>qiime demux summarize \</span>
+<span id="cb44-18"><a href="data-preprocessing.html#cb44-18" tabindex="-1"></a> <span class="sc">--</span>i<span class="sc">-</span>data <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>joined<span class="sc">-</span>reads_birds.qza \</span>
+<span id="cb44-19"><a href="data-preprocessing.html#cb44-19" tabindex="-1"></a> <span class="sc">--</span>o<span class="sc">-</span>visualization <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>summaries<span class="sc">/</span>joining<span class="sc">-</span>summary_birds.qzv</span>
+<span id="cb44-20"><a href="data-preprocessing.html#cb44-20" tabindex="-1"></a></span>
+<span id="cb44-21"><a href="data-preprocessing.html#cb44-21" tabindex="-1"></a><span class="co">#commands for joining reads of all sediment samples</span></span>
+<span id="cb44-22"><a href="data-preprocessing.html#cb44-22" tabindex="-1"></a>qiime vsearch merge<span class="sc">-</span>pairs \</span>
+<span id="cb44-23"><a href="data-preprocessing.html#cb44-23" tabindex="-1"></a> <span class="sc">--</span>i<span class="sc">-</span>demultiplexed<span class="sc">-</span>seqs <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>trimmed<span class="sc">-</span>reads_sediments.qza \</span>
+<span id="cb44-24"><a href="data-preprocessing.html#cb44-24" tabindex="-1"></a> <span class="sc">--</span>o<span class="sc">-</span>joined<span class="sc">-</span>sequences <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>joined<span class="sc">-</span>reads_sediments.qza</span>
+<span id="cb44-25"><a href="data-preprocessing.html#cb44-25" tabindex="-1"></a></span>
+<span id="cb44-26"><a href="data-preprocessing.html#cb44-26" tabindex="-1"></a>qiime demux summarize \</span>
+<span id="cb44-27"><a href="data-preprocessing.html#cb44-27" tabindex="-1"></a> <span class="sc">--</span>i<span class="sc">-</span>data <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>joined<span class="sc">-</span>reads_sediments.qza \</span>
+<span id="cb44-28"><a href="data-preprocessing.html#cb44-28" tabindex="-1"></a> <span class="sc">--</span>o<span class="sc">-</span>visualization <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>summaries<span class="sc">/</span>joining<span class="sc">-</span>summary_sediments.qzv</span></code></pre></div>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="data-preprocessing.html#cb45-1" tabindex="-1"></a>sbatch joining.sh</span></code></pre></div>
+</div>
+<div id="quality-filtering" class="section level3 hasAnchor" number="6.2.4">
+<h3><span class="header-section-number">6.2.4</span> Quality filtering<a href="data-preprocessing.html#quality-filtering" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Finally, it is always good practise to filter your data based on quality,</p>
+<p>I wrote a job script to run a quality filter on the joined reads using the <code>qiime quality-filter</code> command <strong>[10]</strong> and created a summary report of the check using the <code>qiime demux sumamrize</code> command</p>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="data-preprocessing.html#cb46-1" tabindex="-1"></a>nano qualityfilter.sh</span></code></pre></div>
+<p>Open nano and use the following job script titled <code>quality-filter.sh</code>, edit accordingly, and run using <code>sbatch</code>:</p>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="data-preprocessing.html#cb47-1" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb47-2"><a href="data-preprocessing.html#cb47-2" tabindex="-1"></a><span class="co">#SBATCH --time=</span></span>
+<span id="cb47-3"><a href="data-preprocessing.html#cb47-3" tabindex="-1"></a><span class="co">#SBATCH --account=&lt;group-ID&gt;</span></span>
+<span id="cb47-4"><a href="data-preprocessing.html#cb47-4" tabindex="-1"></a><span class="co">#SBATCH --mem=</span></span>
+<span id="cb47-5"><a href="data-preprocessing.html#cb47-5" tabindex="-1"></a></span>
+<span id="cb47-6"><a href="data-preprocessing.html#cb47-6" tabindex="-1"></a>export APPTAINER_BIND<span class="ot">=</span><span class="er">/</span>project<span class="sc">/</span><span class="dv">6011879</span><span class="sc">/</span><span class="er">&lt;</span>user<span class="sc">-</span>ID<span class="sc">&gt;</span><span class="er">/:/</span>data</span>
+<span id="cb47-7"><a href="data-preprocessing.html#cb47-7" tabindex="-1"></a>export APPTAINER_WORKDIR<span class="ot">=</span><span class="er">$</span>{SLURM_TMPDIR}</span>
+<span id="cb47-8"><a href="data-preprocessing.html#cb47-8" tabindex="-1"></a></span>
+<span id="cb47-9"><a href="data-preprocessing.html#cb47-9" tabindex="-1"></a>module load qiime2<span class="sc">/</span><span class="fl">2023.5</span></span>
+<span id="cb47-10"><a href="data-preprocessing.html#cb47-10" tabindex="-1"></a></span>
+<span id="cb47-11"><a href="data-preprocessing.html#cb47-11" tabindex="-1"></a><span class="co">#for bird samples</span></span>
+<span id="cb47-12"><a href="data-preprocessing.html#cb47-12" tabindex="-1"></a>qiime quality<span class="sc">-</span>filter q<span class="sc">-</span>score \</span>
+<span id="cb47-13"><a href="data-preprocessing.html#cb47-13" tabindex="-1"></a> <span class="sc">--</span>i<span class="sc">-</span>demux <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>joined<span class="sc">-</span>reads_birds.qza \</span>
+<span id="cb47-14"><a href="data-preprocessing.html#cb47-14" tabindex="-1"></a> <span class="sc">--</span>o<span class="sc">-</span>filter<span class="sc">-</span>stats <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>filt_stats_birds.qza \</span>
+<span id="cb47-15"><a href="data-preprocessing.html#cb47-15" tabindex="-1"></a> <span class="sc">--</span>o<span class="sc">-</span>merged<span class="sc">-</span>sequences <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>filteredreads_birds.qza</span>
+<span id="cb47-16"><a href="data-preprocessing.html#cb47-16" tabindex="-1"></a></span>
+<span id="cb47-17"><a href="data-preprocessing.html#cb47-17" tabindex="-1"></a>qiime demux summarize \</span>
+<span id="cb47-18"><a href="data-preprocessing.html#cb47-18" tabindex="-1"></a> <span class="sc">--</span>i<span class="sc">-</span>data <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>filteredreads_birds.qza \</span>
+<span id="cb47-19"><a href="data-preprocessing.html#cb47-19" tabindex="-1"></a> <span class="sc">--</span>o<span class="sc">-</span>visualization <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>summaries<span class="sc">/</span>filteredreads_birds.qzv</span>
+<span id="cb47-20"><a href="data-preprocessing.html#cb47-20" tabindex="-1"></a></span>
+<span id="cb47-21"><a href="data-preprocessing.html#cb47-21" tabindex="-1"></a><span class="co">#for sediment samples</span></span>
+<span id="cb47-22"><a href="data-preprocessing.html#cb47-22" tabindex="-1"></a>qiime quality<span class="sc">-</span>filter q<span class="sc">-</span>score \</span>
+<span id="cb47-23"><a href="data-preprocessing.html#cb47-23" tabindex="-1"></a> <span class="sc">--</span>i<span class="sc">-</span>demux <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>joined<span class="sc">-</span>reads_sediments.qza \</span>
+<span id="cb47-24"><a href="data-preprocessing.html#cb47-24" tabindex="-1"></a> <span class="sc">--</span>o<span class="sc">-</span>filter<span class="sc">-</span>stats <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>filt_stats_sediments.qza \</span>
+<span id="cb47-25"><a href="data-preprocessing.html#cb47-25" tabindex="-1"></a> <span class="sc">--</span>o<span class="sc">-</span>merged<span class="sc">-</span>sequences <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>filteredreads_sediments.qza</span>
+<span id="cb47-26"><a href="data-preprocessing.html#cb47-26" tabindex="-1"></a></span>
+<span id="cb47-27"><a href="data-preprocessing.html#cb47-27" tabindex="-1"></a>qiime demux summarize \</span>
+<span id="cb47-28"><a href="data-preprocessing.html#cb47-28" tabindex="-1"></a> <span class="sc">--</span>i<span class="sc">-</span>data <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>filteredreads_sediments.qza \</span>
+<span id="cb47-29"><a href="data-preprocessing.html#cb47-29" tabindex="-1"></a> <span class="sc">--</span>o<span class="sc">-</span>visualization <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>summaries<span class="sc">/</span>filteredreads_sediments.qzv</span></code></pre></div>
+<p>Now that we have trimmed the primers, joined the read files and quality filtered the data, we can begin transforming the data by constructing amplicon sequence variants (ASV’s) and assigning taxonomy to our samples using a reference database.</p>
+</div>
+</div>
+<div id="data-transformation" class="section level2 hasAnchor" number="6.3">
+<h2><span class="header-section-number">6.3</span> <strong>Data transformation</strong><a href="data-preprocessing.html#data-transformation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In the context of amplicon sequence analysis, data transformation refers to the manipulation and organization of raw sequencing data into a format that can be used for downstream analysis. This includes steps such as quality filtering, denoising, and assigning unique sequence variants to create an Amplicon Sequence Variant (ASV) table. Transforming the raw sequencing data allows us to explore and interpret microbial community composition and dynamics.</p>
+<div id="constructing-asvs" class="section level3 hasAnchor" number="6.3.1">
+<h3><span class="header-section-number">6.3.1</span> Constructing ASV’s<a href="data-preprocessing.html#constructing-asvs" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>ASV (Amplicon Sequence Variant) analysis is a newer approach used in microbial community studies <strong>[11]</strong>, particularly in the analysis of 16S rRNA gene sequencing data - it is different from the more well-known Operational Taxonomic Unit (OTU) approach. ASV analysis sees each unique sequence variant as its own special biological entity. Even a tiny difference of just one nucleotide between two sequences means they become separate ASVs. It’s different from the traditional way of grouping sequences into OTUs (Operational Taxonomic Units) based on a similarity threshold of around 97%. With ASVs, we get a sharper resolution, picking up even the tiniest genetic variations in the microbial community. By keeping the uniqueness intact, ASVs can give us more precise taxonomic assignments.</p>
+<p>While both methods, ASV and OTU, are accepted and widely used in microbial ecology, there has been a growing preference for ASVs due to their ability to distinguish closely related taxa and to reduce the impact of sequencing errors and noise in the data. That means we can get more sensitive and biologically meaningful results.</p>
+<p>To begin, the reads from each joined-pair file are corrected and then amplicon sequence variants can be constructed for each file using the qiime deblur plug-in <strong>[12]</strong> for 16S data. Here, I used a trimming length (<code>--p-trim-length</code>) equal to <strong>240</strong> based on the <strong>quality score</strong> of the reads that were obtained in the previous section.</p>
+<p>Use this job script to run the ASV construction on both sediment and bird samples, and run the <code>qiime feature-table summary</code> command to create a .QZV file that lists the number of ASV’s in each feature table:</p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="data-preprocessing.html#cb48-1" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb48-2"><a href="data-preprocessing.html#cb48-2" tabindex="-1"></a><span class="co">#SBATCH --time=</span></span>
+<span id="cb48-3"><a href="data-preprocessing.html#cb48-3" tabindex="-1"></a><span class="co">#SBATCH --account=&lt;group-ID&gt;</span></span>
+<span id="cb48-4"><a href="data-preprocessing.html#cb48-4" tabindex="-1"></a><span class="co">#SBATCH --mem=</span></span>
+<span id="cb48-5"><a href="data-preprocessing.html#cb48-5" tabindex="-1"></a></span>
+<span id="cb48-6"><a href="data-preprocessing.html#cb48-6" tabindex="-1"></a>export APPTAINER_BIND<span class="ot">=</span><span class="er">/</span>project<span class="sc">/</span><span class="dv">6011879</span><span class="sc">/</span><span class="er">&lt;</span>user<span class="sc">-</span>ID<span class="sc">&gt;</span><span class="er">/:/</span>data</span>
+<span id="cb48-7"><a href="data-preprocessing.html#cb48-7" tabindex="-1"></a>export APPTAINER_WORKDIR<span class="ot">=</span><span class="er">$</span>{SLURM_TMPDIR}</span>
+<span id="cb48-8"><a href="data-preprocessing.html#cb48-8" tabindex="-1"></a></span>
+<span id="cb48-9"><a href="data-preprocessing.html#cb48-9" tabindex="-1"></a>module load qiime2<span class="sc">/</span><span class="fl">2023.5</span></span>
+<span id="cb48-10"><a href="data-preprocessing.html#cb48-10" tabindex="-1"></a></span>
+<span id="cb48-11"><a href="data-preprocessing.html#cb48-11" tabindex="-1"></a><span class="co">#for sediment core sub-samples</span></span>
+<span id="cb48-12"><a href="data-preprocessing.html#cb48-12" tabindex="-1"></a>qiime deblur denoise<span class="sc">-</span>16S \</span>
+<span id="cb48-13"><a href="data-preprocessing.html#cb48-13" tabindex="-1"></a>  <span class="sc">--</span>i<span class="sc">-</span>demultiplexed<span class="sc">-</span>seqs <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>filteredreads_sediments.qza \</span>
+<span id="cb48-14"><a href="data-preprocessing.html#cb48-14" tabindex="-1"></a>  <span class="sc">--</span>p<span class="sc">-</span>trim<span class="sc">-</span>length <span class="dv">240</span> \</span>
+<span id="cb48-15"><a href="data-preprocessing.html#cb48-15" tabindex="-1"></a>  <span class="sc">--</span>p<span class="sc">-</span>sample<span class="sc">-</span>stats \</span>
+<span id="cb48-16"><a href="data-preprocessing.html#cb48-16" tabindex="-1"></a>  <span class="sc">--</span>o<span class="sc">-</span>representative<span class="sc">-</span>sequences <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>rep<span class="sc">-</span>seqs_sediments.qza \</span>
+<span id="cb48-17"><a href="data-preprocessing.html#cb48-17" tabindex="-1"></a>  <span class="sc">--</span>o<span class="sc">-</span>table <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>feature<span class="sc">-</span>table_sediments.qza \</span>
+<span id="cb48-18"><a href="data-preprocessing.html#cb48-18" tabindex="-1"></a>  <span class="sc">--</span>o<span class="sc">-</span>stats <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>deblurstats_sediments.qza</span>
+<span id="cb48-19"><a href="data-preprocessing.html#cb48-19" tabindex="-1"></a></span>
+<span id="cb48-20"><a href="data-preprocessing.html#cb48-20" tabindex="-1"></a> qiime feature<span class="sc">-</span>table summarize \</span>
+<span id="cb48-21"><a href="data-preprocessing.html#cb48-21" tabindex="-1"></a> <span class="sc">--</span>i<span class="sc">-</span>table <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>feature<span class="sc">-</span>table_sediments.qza \</span>
+<span id="cb48-22"><a href="data-preprocessing.html#cb48-22" tabindex="-1"></a> <span class="sc">--</span>o<span class="sc">-</span>visualization <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>summaries<span class="sc">/</span>feature<span class="sc">-</span>table_sediments.qzv</span>
+<span id="cb48-23"><a href="data-preprocessing.html#cb48-23" tabindex="-1"></a></span>
+<span id="cb48-24"><a href="data-preprocessing.html#cb48-24" tabindex="-1"></a> </span>
+<span id="cb48-25"><a href="data-preprocessing.html#cb48-25" tabindex="-1"></a><span class="co">#for seabird fecal swab samples</span></span>
+<span id="cb48-26"><a href="data-preprocessing.html#cb48-26" tabindex="-1"></a>qiime deblur denoise<span class="sc">-</span>16S \</span>
+<span id="cb48-27"><a href="data-preprocessing.html#cb48-27" tabindex="-1"></a>  <span class="sc">--</span>i<span class="sc">-</span>demultiplexed<span class="sc">-</span>seqs <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>filteredreads_birds.qza \</span>
+<span id="cb48-28"><a href="data-preprocessing.html#cb48-28" tabindex="-1"></a>  <span class="sc">--</span>p<span class="sc">-</span>trim<span class="sc">-</span>length <span class="dv">240</span> \</span>
+<span id="cb48-29"><a href="data-preprocessing.html#cb48-29" tabindex="-1"></a>  <span class="sc">--</span>p<span class="sc">-</span>sample<span class="sc">-</span>stats \</span>
+<span id="cb48-30"><a href="data-preprocessing.html#cb48-30" tabindex="-1"></a>  <span class="sc">--</span>o<span class="sc">-</span>representative<span class="sc">-</span>sequences <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>rep<span class="sc">-</span>seqs_birds.qza \</span>
+<span id="cb48-31"><a href="data-preprocessing.html#cb48-31" tabindex="-1"></a>  <span class="sc">--</span>o<span class="sc">-</span>table <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>feature<span class="sc">-</span>table_birds.qza \</span>
+<span id="cb48-32"><a href="data-preprocessing.html#cb48-32" tabindex="-1"></a>  <span class="sc">--</span>o<span class="sc">-</span>stats <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>deblurstats_birds.qza</span>
+<span id="cb48-33"><a href="data-preprocessing.html#cb48-33" tabindex="-1"></a></span>
+<span id="cb48-34"><a href="data-preprocessing.html#cb48-34" tabindex="-1"></a> qiime feature<span class="sc">-</span>table summarize \</span>
+<span id="cb48-35"><a href="data-preprocessing.html#cb48-35" tabindex="-1"></a> <span class="sc">--</span>i<span class="sc">-</span>table <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>feature<span class="sc">-</span>table_birds.qza \</span>
+<span id="cb48-36"><a href="data-preprocessing.html#cb48-36" tabindex="-1"></a> <span class="sc">--</span>o<span class="sc">-</span>visualization <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>summaries<span class="sc">/</span>feature<span class="sc">-</span>table_birds.qzv</span></code></pre></div>
+<p>At this point, there should be 10 files in total produced by this script (5 for each sample type), including:</p>
+<table>
+<colgroup>
+<col width="26%" />
+<col width="73%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>File</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>deblur.log</td>
+<td>a job file that lists processing details, as well as the total sequences, passing sequences, and failing sequences</td>
+</tr>
+<tr class="even">
+<td>deblurstats.qza</td>
+<td>statistical information on the ASV construction (can be view using the following command: <code>qiime metadata tabulate --m-input-file deblurstats.qza --o-visualization deblurstats.qzv</code> )</td>
+</tr>
+<tr class="odd">
+<td>rep-seqs.qza</td>
+<td>this file contains all the sequences associated to each ASV (multiple sequences can be associated to one ASV)</td>
+</tr>
+<tr class="even">
+<td>featuretabledeblur.qza</td>
+<td>this file contains a table of all the ASV’s associated to each sample</td>
+</tr>
+<tr class="odd">
+<td>deblurtablesummary.qzv</td>
+<td>summary file created from the <code>qiime feature-table summary</code> command</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="data-reduction" class="section level2 hasAnchor" number="6.4">
+<h2><span class="header-section-number">6.4</span> <strong>Data reduction</strong><a href="data-preprocessing.html#data-reduction" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Data reduction is the last data preprocessing step covered in this tutorial. Here, data is reduced based on the confidence of taxonomic classifications, level of classification and uniqueness of the assignments.</p>
+<div id="filtering-unique-reads" class="section level3 hasAnchor" number="6.4.1">
+<h3><span class="header-section-number">6.4.1</span> Filtering unique reads<a href="data-preprocessing.html#filtering-unique-reads" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>First, filter out ASVs based on total frequency of samples, which removes all unique reads in the library that are not wanted since they are likely due to Mi-Seq bleed-through between runs (~0.1%).</p>
+<p>We used the following <code>filter-features</code> command, as a part of the <code>feature-table</code> plug-in to begin filtering our table. For this command, a cut-off of 10 was used for the minimum frequency (<code>--p-min-frequency</code>) option. I decided to set the minimum number of samples a feature must appear in to just 1 sample (–p-min-samples). This way, I made sure to include all samples in our set, even the ones with unique or rare features. After filtering out rare ASVs, a summary command can be run to view how many reads were lost in each file.</p>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="data-preprocessing.html#cb49-1" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb49-2"><a href="data-preprocessing.html#cb49-2" tabindex="-1"></a><span class="co">#SBATCH --time=</span></span>
+<span id="cb49-3"><a href="data-preprocessing.html#cb49-3" tabindex="-1"></a><span class="co">#SBATCH --account=&lt;group-ID&gt;</span></span>
+<span id="cb49-4"><a href="data-preprocessing.html#cb49-4" tabindex="-1"></a><span class="co">#SBATCH --mem=</span></span>
+<span id="cb49-5"><a href="data-preprocessing.html#cb49-5" tabindex="-1"></a></span>
+<span id="cb49-6"><a href="data-preprocessing.html#cb49-6" tabindex="-1"></a>export APPTAINER_BIND<span class="ot">=</span><span class="er">/</span>project<span class="sc">/</span><span class="dv">6011879</span><span class="sc">/</span><span class="er">&lt;</span>user<span class="sc">-</span>ID<span class="sc">&gt;</span><span class="er">/:/</span>data</span>
+<span id="cb49-7"><a href="data-preprocessing.html#cb49-7" tabindex="-1"></a>export APPTAINER_WORKDIR<span class="ot">=</span><span class="er">$</span>{SLURM_TMPDIR}</span>
+<span id="cb49-8"><a href="data-preprocessing.html#cb49-8" tabindex="-1"></a></span>
+<span id="cb49-9"><a href="data-preprocessing.html#cb49-9" tabindex="-1"></a>module load qiime2<span class="sc">/</span><span class="fl">2023.5</span></span>
+<span id="cb49-10"><a href="data-preprocessing.html#cb49-10" tabindex="-1"></a></span>
+<span id="cb49-11"><a href="data-preprocessing.html#cb49-11" tabindex="-1"></a><span class="co">#for sediment samples</span></span>
+<span id="cb49-12"><a href="data-preprocessing.html#cb49-12" tabindex="-1"></a>qiime feature<span class="sc">-</span>table filter<span class="sc">-</span>features \</span>
+<span id="cb49-13"><a href="data-preprocessing.html#cb49-13" tabindex="-1"></a> <span class="sc">--</span>i<span class="sc">-</span>table <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>feature<span class="sc">-</span>table_sediments.qza \</span>
+<span id="cb49-14"><a href="data-preprocessing.html#cb49-14" tabindex="-1"></a> <span class="sc">--</span>p<span class="sc">-</span>min<span class="sc">-</span>frequency <span class="dv">10</span> \</span>
+<span id="cb49-15"><a href="data-preprocessing.html#cb49-15" tabindex="-1"></a> <span class="sc">--</span>p<span class="sc">-</span>min<span class="sc">-</span>samples <span class="dv">1</span> \</span>
+<span id="cb49-16"><a href="data-preprocessing.html#cb49-16" tabindex="-1"></a> <span class="sc">--</span>o<span class="sc">-</span>filtered<span class="sc">-</span>table <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>filtered_feature<span class="sc">-</span>table_sediments.qza</span>
+<span id="cb49-17"><a href="data-preprocessing.html#cb49-17" tabindex="-1"></a></span>
+<span id="cb49-18"><a href="data-preprocessing.html#cb49-18" tabindex="-1"></a>qiime feature<span class="sc">-</span>table summarize \</span>
+<span id="cb49-19"><a href="data-preprocessing.html#cb49-19" tabindex="-1"></a> <span class="sc">--</span>i<span class="sc">-</span>table <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>filtered_feature<span class="sc">-</span>table_sediments.qza \</span>
+<span id="cb49-20"><a href="data-preprocessing.html#cb49-20" tabindex="-1"></a> <span class="sc">--</span>o<span class="sc">-</span>visualization <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>summaries<span class="sc">/</span>filtered_feature<span class="sc">-</span>table_sediments.qzv</span>
+<span id="cb49-21"><a href="data-preprocessing.html#cb49-21" tabindex="-1"></a></span>
+<span id="cb49-22"><a href="data-preprocessing.html#cb49-22" tabindex="-1"></a><span class="co">#for seabird samples</span></span>
+<span id="cb49-23"><a href="data-preprocessing.html#cb49-23" tabindex="-1"></a>qiime feature<span class="sc">-</span>table filter<span class="sc">-</span>features \</span>
+<span id="cb49-24"><a href="data-preprocessing.html#cb49-24" tabindex="-1"></a> <span class="sc">--</span>i<span class="sc">-</span>table <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>feature<span class="sc">-</span>table_birds.qza \</span>
+<span id="cb49-25"><a href="data-preprocessing.html#cb49-25" tabindex="-1"></a> <span class="sc">--</span>p<span class="sc">-</span>min<span class="sc">-</span>frequency <span class="dv">10</span> \</span>
+<span id="cb49-26"><a href="data-preprocessing.html#cb49-26" tabindex="-1"></a> <span class="sc">--</span>p<span class="sc">-</span>min<span class="sc">-</span>samples <span class="dv">1</span> \</span>
+<span id="cb49-27"><a href="data-preprocessing.html#cb49-27" tabindex="-1"></a> <span class="sc">--</span>o<span class="sc">-</span>filtered<span class="sc">-</span>table <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>filtered_feature<span class="sc">-</span>table_birds.qza</span>
+<span id="cb49-28"><a href="data-preprocessing.html#cb49-28" tabindex="-1"></a></span>
+<span id="cb49-29"><a href="data-preprocessing.html#cb49-29" tabindex="-1"></a>qiime feature<span class="sc">-</span>table summarize \</span>
+<span id="cb49-30"><a href="data-preprocessing.html#cb49-30" tabindex="-1"></a> <span class="sc">--</span>i<span class="sc">-</span>table <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>filtered_feature<span class="sc">-</span>table_birds.qza \</span>
+<span id="cb49-31"><a href="data-preprocessing.html#cb49-31" tabindex="-1"></a> <span class="sc">--</span>o<span class="sc">-</span>visualization <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>summaries<span class="sc">/</span>filtered_feature<span class="sc">-</span>table_birds.qzv</span></code></pre></div>
+<p>To see a review on some of the parameters you can use for the <code>filter-features</code> command, use” <code>qiime feature-table filter-features --help</code>.</p>
+<p>Transfer the summary file to your local computer using the SFTP reviewed in Ch-03 (Importing Data), in order to view the results on <a href="view.qiime2.org">view.qiime2.org</a>.</p>
+</div>
+</div>
+<div id="manipulating-tables" class="section level2 hasAnchor" number="6.5">
+<h2><span class="header-section-number">6.5</span> <strong>Manipulating tables</strong><a href="data-preprocessing.html#manipulating-tables" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Knowing how to manipulate QIIME2 feature tables for downstream analysis (concatenating, merging, grouping, collapsing, etc.) is crucial because it allows you to customize and structure microbiome data effectively and extract meaningful insights. This way you can perform accurate statistical analyses tailored to your research questions!</p>
+<div id="merging-feature-tables" class="section level3 hasAnchor" number="6.5.1">
+<h3><span class="header-section-number">6.5.1</span> Merging feature tables<a href="data-preprocessing.html#merging-feature-tables" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>First let’s create a feature table that merges feature counts from <code>filtered_feature-table_birds.qza</code> and <code>filtered_feature-table_sediments.qza</code>. In the QIIME2 command-line tool, the <code>qiime feature-table merge</code> command allows you to merge multiple feature tables. One thing you’ll also want to do upon merging your feature tables is merge your representative sequence files using the <code>merge-seqs</code> command. This can be done the exact same way as above. Check to make sure the table was merged properly using the summary command by transferring the file to your local computer to view on <a href="view.qiime2.org">view.qiime2.org</a>.</p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="data-preprocessing.html#cb50-1" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb50-2"><a href="data-preprocessing.html#cb50-2" tabindex="-1"></a><span class="co">#SBATCH --time=</span></span>
+<span id="cb50-3"><a href="data-preprocessing.html#cb50-3" tabindex="-1"></a><span class="co">#SBATCH --account=&lt;group-ID&gt;</span></span>
+<span id="cb50-4"><a href="data-preprocessing.html#cb50-4" tabindex="-1"></a><span class="co">#SBATCH --mem=</span></span>
+<span id="cb50-5"><a href="data-preprocessing.html#cb50-5" tabindex="-1"></a></span>
+<span id="cb50-6"><a href="data-preprocessing.html#cb50-6" tabindex="-1"></a>export APPTAINER_BIND<span class="ot">=</span><span class="er">/</span>project<span class="sc">/</span><span class="dv">6011879</span><span class="sc">/</span><span class="er">&lt;</span>user<span class="sc">-</span>ID<span class="sc">&gt;</span><span class="er">/:/</span>data</span>
+<span id="cb50-7"><a href="data-preprocessing.html#cb50-7" tabindex="-1"></a>export APPTAINER_WORKDIR<span class="ot">=</span><span class="er">$</span>{SLURM_TMPDIR}</span>
+<span id="cb50-8"><a href="data-preprocessing.html#cb50-8" tabindex="-1"></a></span>
+<span id="cb50-9"><a href="data-preprocessing.html#cb50-9" tabindex="-1"></a>module load qiime2<span class="sc">/</span><span class="fl">2023.5</span></span>
+<span id="cb50-10"><a href="data-preprocessing.html#cb50-10" tabindex="-1"></a></span>
+<span id="cb50-11"><a href="data-preprocessing.html#cb50-11" tabindex="-1"></a>qiime feature<span class="sc">-</span>table merge \</span>
+<span id="cb50-12"><a href="data-preprocessing.html#cb50-12" tabindex="-1"></a> <span class="sc">--</span>i<span class="sc">-</span>tables <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>filtered_feature<span class="sc">-</span>table_birds.qza <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>filtered_feature<span class="sc">-</span>table_sediments.qza \</span>
+<span id="cb50-13"><a href="data-preprocessing.html#cb50-13" tabindex="-1"></a> <span class="sc">--</span>p<span class="sc">-</span>overlap<span class="sc">-</span>method sum \</span>
+<span id="cb50-14"><a href="data-preprocessing.html#cb50-14" tabindex="-1"></a> <span class="sc">--</span>o<span class="sc">-</span>merged<span class="sc">-</span>table <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>merged<span class="sc">-</span>table.qza</span>
+<span id="cb50-15"><a href="data-preprocessing.html#cb50-15" tabindex="-1"></a></span>
+<span id="cb50-16"><a href="data-preprocessing.html#cb50-16" tabindex="-1"></a>qiime feature<span class="sc">-</span>table merge<span class="sc">-</span>seqs \</span>
+<span id="cb50-17"><a href="data-preprocessing.html#cb50-17" tabindex="-1"></a> <span class="sc">--</span>i<span class="sc">-</span>data <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>rep<span class="sc">-</span>seqs_birds.qza <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>rep<span class="sc">-</span>seqs_sediments.qza \</span>
+<span id="cb50-18"><a href="data-preprocessing.html#cb50-18" tabindex="-1"></a> <span class="sc">--</span>o<span class="sc">-</span>merged<span class="sc">-</span>data <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>merged_rep<span class="sc">-</span>seqs.qza</span>
+<span id="cb50-19"><a href="data-preprocessing.html#cb50-19" tabindex="-1"></a></span>
+<span id="cb50-20"><a href="data-preprocessing.html#cb50-20" tabindex="-1"></a>qiime feature<span class="sc">-</span>table summarize \</span>
+<span id="cb50-21"><a href="data-preprocessing.html#cb50-21" tabindex="-1"></a> <span class="sc">--</span>i<span class="sc">-</span>table <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>merged<span class="sc">-</span>table.qza \</span>
+<span id="cb50-22"><a href="data-preprocessing.html#cb50-22" tabindex="-1"></a> <span class="sc">--</span>o<span class="sc">-</span>visualization <span class="sc">/</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>summaries<span class="sc">/</span>merged<span class="sc">-</span>table.qzv</span></code></pre></div>
+<p>Make sure that when you are listing your input tables (<code>--i-tables</code>) that there is a space between the two tables you want to merge (this command will not work if you put two <code>--i-tables</code> options). In the above command, the <code>--p-overlap-method</code> parameter specifies how the tool should handle overlapping feature IDs when merging these tables. The reason you have to specify an overlap method is because QIIME2 needs to know how to handle cases where the same feature (i.e., the same ID) appears in multiple input feature tables. This situation can arise when you are merging tables that have the same sample IDs, and it’s important to determine how to handle these overlaps to ensure the accuracy of downstream analyses. The <code>--p-overlap-method</code> parameter offers several options for handling overlapping IDs:</p>
+<ul>
+<li><p><code>average</code> calculates the average value for each overlapping feature ID across all the input tables.</p></li>
+<li><p><code>error_on_overlapping_feature</code> raises an error if there are overlapping feature IDs in the input tables, indicating that you do not want to allow such overlaps.</p></li>
+<li><p><code>error_on_overlapping_sample</code> raises an error if there are overlapping sample IDs in the input tables, indicating that you do not want to allow such overlaps.</p></li>
+<li><p><code>sum</code> will add up the values for each overlapping feature ID across all the input tables.</p></li>
+</ul>
+<p>In this case, there are completely different samples in each feature table, so there is no overlap in the sample IDs between the two tables, but there may be overlap in the feature IDs. Using the <code>--p-overlap-method sum</code> option to merge the tables won’t affect the samples in this case.</p>
+<hr />
+ 
+<hr />
+<p style="text-align: center;">
+Github: <a href="https://github.com/johannabosch">johannabosch</a> </a>
+</p>
+<p style="text-align: center;">
+<span style="color: #808080;"><em><a href="mailto:yohannabosch@gmail.com" class="email">yohannabosch@gmail.com</a></em></span>
+</p>
+<!-- Add icon library -->
+<p><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></p>
+<!-- Add font awesome icons -->
+<p style="text-align: center;">
+<a href="https://www.instagram.com/yohannabosch/" class="fa fa-instagram"></a>
+<a href="https://www.linkedin.com/in/yan-holtz-2477534a/" class="fa fa-linkedin"></a>
+<a href="https://github.com/johannabosch/" class="fa fa-github"></a>
+</p>
+<p> </p>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="getting-started-with-qiime2.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="diversity-analyses.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/USERNAME/REPO/edit/BRANCH/06-DataPreprocessing.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["_main.pdf", "_main.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

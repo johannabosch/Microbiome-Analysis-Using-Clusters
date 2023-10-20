@@ -1,0 +1,21 @@
+bookdown::gitbook:
+  css: style.css
+  config:
+    toc:
+      before: |
+        <li><a href="./">Comparative 16S Amplicon Analysis using QIIME2 on a computing cluster: Tutorial and Resources</a></li>
+      after: |
+        <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+    edit: https://github.com/USERNAME/REPO/edit/BRANCH/%s
+    download: ["pdf", "epub"]
+bookdown::html_book:
+  output: 
+  bookdown:html_book:
+    theme: flatly
+    highlight: haddock
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: true
+  keep_tex: yes
+bookdown::epub_book: default

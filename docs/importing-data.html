@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>3 IMPORTING DATA | 16S Microbiome Analysis on a Computing Cluster</title>
+  <meta name="description" content="3 IMPORTING DATA | 16S Microbiome Analysis on a Computing Cluster" />
+  <meta name="generator" content="bookdown 0.34 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="3 IMPORTING DATA | 16S Microbiome Analysis on a Computing Cluster" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta name="github-repo" content="johannabosch/QIIME2_for_Graham" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="3 IMPORTING DATA | 16S Microbiome Analysis on a Computing Cluster" />
+  
+  
+  
+
+<meta name="author" content="Johanna Bosch" />
+
+
+<meta name="date" content="2023-10-20" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="compute-canada-basics.html"/>
+<link rel="next" href="qiime2-on-the-cluster.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Comparative 16S Amplicon Analysis using QIIME2 on a computing cluster: Tutorial and Resources</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome!</a></li>
+<li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> <strong>INTRODUCTION</strong></a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="introduction.html"><a href="introduction.html#a-brief-project-review"><i class="fa fa-check"></i><b>1.1</b> <strong>A brief project review</strong></a>
+<ul>
+<li class="chapter" data-level="1.1.1" data-path="introduction.html"><a href="introduction.html#study-species-and-sites"><i class="fa fa-check"></i><b>1.1.1</b> Study species and sites</a></li>
+<li class="chapter" data-level="1.1.2" data-path="introduction.html"><a href="introduction.html#sequencing-library-prep"><i class="fa fa-check"></i><b>1.1.2</b> Sequencing &amp; library prep</a></li>
+<li class="chapter" data-level="1.1.3" data-path="introduction.html"><a href="introduction.html#files-after-sequencing"><i class="fa fa-check"></i><b>1.1.3</b> Files after sequencing</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="introduction.html"><a href="introduction.html#dna-analysis"><i class="fa fa-check"></i><b>1.2</b> <strong>DNA analysis</strong></a>
+<ul>
+<li class="chapter" data-level="1.2.1" data-path="introduction.html"><a href="introduction.html#the-graham-cluster"><i class="fa fa-check"></i><b>1.2.1</b> The Graham cluster</a></li>
+<li class="chapter" data-level="1.2.2" data-path="introduction.html"><a href="introduction.html#data-accessibility"><i class="fa fa-check"></i><b>1.2.2</b> Data accessibility</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="compute-canada-basics.html"><a href="compute-canada-basics.html"><i class="fa fa-check"></i><b>2</b> <strong>COMPUTE CANADA BASICS</strong></a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="compute-canada-basics.html"><a href="compute-canada-basics.html#cluster-computing-basics"><i class="fa fa-check"></i><b>2.1</b> <strong>Cluster computing basics</strong></a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="compute-canada-basics.html"><a href="compute-canada-basics.html#signing-into-the-cluster"><i class="fa fa-check"></i><b>2.1.1</b> Signing into the cluster</a></li>
+<li class="chapter" data-level="2.1.2" data-path="compute-canada-basics.html"><a href="compute-canada-basics.html#basic-computing-commands"><i class="fa fa-check"></i><b>2.1.2</b> Basic computing commands</a></li>
+<li class="chapter" data-level="2.1.3" data-path="compute-canada-basics.html"><a href="compute-canada-basics.html#loading-modules"><i class="fa fa-check"></i><b>2.1.3</b> Loading modules</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="compute-canada-basics.html"><a href="compute-canada-basics.html#job-scripts"><i class="fa fa-check"></i><b>2.2</b> <strong>Job scripts </strong></a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="compute-canada-basics.html"><a href="compute-canada-basics.html#using-nano"><i class="fa fa-check"></i><b>2.2.1</b> Using Nano</a></li>
+<li class="chapter" data-level="2.2.2" data-path="compute-canada-basics.html"><a href="compute-canada-basics.html#writing-a-bash-script"><i class="fa fa-check"></i><b>2.2.2</b> Writing a bash script</a></li>
+<li class="chapter" data-level="2.2.3" data-path="compute-canada-basics.html"><a href="compute-canada-basics.html#running-scripts-on-the-scheduler"><i class="fa fa-check"></i><b>2.2.3</b> Running scripts on the scheduler</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="importing-data.html"><a href="importing-data.html"><i class="fa fa-check"></i><b>3</b> <strong>IMPORTING DATA</strong></a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="importing-data.html"><a href="importing-data.html#getting-organized"><i class="fa fa-check"></i><b>3.1</b> <strong>Getting organized</strong></a></li>
+<li class="chapter" data-level="3.2" data-path="importing-data.html"><a href="importing-data.html#moving-data-to-the-cluster"><i class="fa fa-check"></i><b>3.2</b> <strong>Moving data to the cluster</strong></a></li>
+<li class="chapter" data-level="3.3" data-path="importing-data.html"><a href="importing-data.html#organizing-.fastq-files"><i class="fa fa-check"></i><b>3.3</b> <strong>Organizing .FASTQ files</strong></a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="importing-data.html"><a href="importing-data.html#unzip-rawdata-files"><i class="fa fa-check"></i><b>3.3.1</b> Unzip rawdata files</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="qiime2-on-the-cluster.html"><a href="qiime2-on-the-cluster.html"><i class="fa fa-check"></i><b>4</b> <strong>QIIME2 ON THE CLUSTER</strong></a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="qiime2-on-the-cluster.html"><a href="qiime2-on-the-cluster.html#use-qiime2-via-apptainer"><i class="fa fa-check"></i><b>4.1</b> <strong>Use QIIME2 via Apptainer</strong></a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="qiime2-on-the-cluster.html"><a href="qiime2-on-the-cluster.html#finding-physical-paths"><i class="fa fa-check"></i><b>4.1.1</b> Finding physical paths</a></li>
+<li class="chapter" data-level="4.1.2" data-path="qiime2-on-the-cluster.html"><a href="qiime2-on-the-cluster.html#using-apptainer-mounts"><i class="fa fa-check"></i><b>4.1.2</b> Using Apptainer mounts</a></li>
+<li class="chapter" data-level="4.1.3" data-path="qiime2-on-the-cluster.html"><a href="qiime2-on-the-cluster.html#getting-help"><i class="fa fa-check"></i><b>4.1.3</b> Getting help</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="getting-started-with-qiime2.html"><a href="getting-started-with-qiime2.html"><i class="fa fa-check"></i><b>5</b> <strong>GETTING STARTED WITH QIIME2</strong></a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="getting-started-with-qiime2.html"><a href="getting-started-with-qiime2.html#creating-artifact-files"><i class="fa fa-check"></i><b>5.1</b> <strong>Creating artifact files</strong></a>
+<ul>
+<li class="chapter" data-level="5.1.1" data-path="getting-started-with-qiime2.html"><a href="getting-started-with-qiime2.html#import-the-.fastq-files"><i class="fa fa-check"></i><b>5.1.1</b> Import the .FASTQ files</a></li>
+<li class="chapter" data-level="5.1.2" data-path="getting-started-with-qiime2.html"><a href="getting-started-with-qiime2.html#inspect-the-.qza-files"><i class="fa fa-check"></i><b>5.1.2</b> Inspect the .QZA files</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="getting-started-with-qiime2.html"><a href="getting-started-with-qiime2.html#visualizing-artifact-files"><i class="fa fa-check"></i><b>5.2</b> <strong>Visualizing artifact files</strong></a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="getting-started-with-qiime2.html"><a href="getting-started-with-qiime2.html#create-a-summary-report"><i class="fa fa-check"></i><b>5.2.1</b> Create a summary report</a></li>
+<li class="chapter" data-level="5.2.2" data-path="getting-started-with-qiime2.html"><a href="getting-started-with-qiime2.html#using-qiime2s-web-app"><i class="fa fa-check"></i><b>5.2.2</b> Using QIIME2’s web-app</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="data-preprocessing.html"><a href="data-preprocessing.html"><i class="fa fa-check"></i><b>6</b> <strong>DATA PREPROCESSING</strong></a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="data-preprocessing.html"><a href="data-preprocessing.html#quality-assessment"><i class="fa fa-check"></i><b>6.1</b> <strong>Quality assessment</strong></a>
+<ul>
+<li class="chapter" data-level="6.1.1" data-path="data-preprocessing.html"><a href="data-preprocessing.html#fastqc"><i class="fa fa-check"></i><b>6.1.1</b> FastQC</a></li>
+<li class="chapter" data-level="6.1.2" data-path="data-preprocessing.html"><a href="data-preprocessing.html#multiqc"><i class="fa fa-check"></i><b>6.1.2</b> MultiQC</a></li>
+<li class="chapter" data-level="6.1.3" data-path="data-preprocessing.html"><a href="data-preprocessing.html#visualizing-data-quality"><i class="fa fa-check"></i><b>6.1.3</b> Visualizing data quality</a></li>
+<li class="chapter" data-level="6.1.4" data-path="data-preprocessing.html"><a href="data-preprocessing.html#plot-types"><i class="fa fa-check"></i><b>6.1.4</b> Plot types</a></li>
+<li class="chapter" data-level="6.1.5" data-path="data-preprocessing.html"><a href="data-preprocessing.html#for-this-study"><i class="fa fa-check"></i><b>6.1.5</b> For this study</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="data-preprocessing.html"><a href="data-preprocessing.html#data-cleaning"><i class="fa fa-check"></i><b>6.2</b> <strong>Data Cleaning</strong></a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="data-preprocessing.html"><a href="data-preprocessing.html#trimming-primers"><i class="fa fa-check"></i><b>6.2.1</b> Trimming primers</a></li>
+<li class="chapter" data-level="6.2.2" data-path="data-preprocessing.html"><a href="data-preprocessing.html#summarizing-data"><i class="fa fa-check"></i><b>6.2.2</b> Summarizing data</a></li>
+<li class="chapter" data-level="6.2.3" data-path="data-preprocessing.html"><a href="data-preprocessing.html#joining-read-pairs"><i class="fa fa-check"></i><b>6.2.3</b> Joining read pairs</a></li>
+<li class="chapter" data-level="6.2.4" data-path="data-preprocessing.html"><a href="data-preprocessing.html#quality-filtering"><i class="fa fa-check"></i><b>6.2.4</b> Quality filtering</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="data-preprocessing.html"><a href="data-preprocessing.html#data-transformation"><i class="fa fa-check"></i><b>6.3</b> <strong>Data transformation</strong></a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="data-preprocessing.html"><a href="data-preprocessing.html#constructing-asvs"><i class="fa fa-check"></i><b>6.3.1</b> Constructing ASV’s</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="data-preprocessing.html"><a href="data-preprocessing.html#data-reduction"><i class="fa fa-check"></i><b>6.4</b> <strong>Data reduction</strong></a>
+<ul>
+<li class="chapter" data-level="6.4.1" data-path="data-preprocessing.html"><a href="data-preprocessing.html#filtering-unique-reads"><i class="fa fa-check"></i><b>6.4.1</b> Filtering unique reads</a></li>
+</ul></li>
+<li class="chapter" data-level="6.5" data-path="data-preprocessing.html"><a href="data-preprocessing.html#manipulating-tables"><i class="fa fa-check"></i><b>6.5</b> <strong>Manipulating tables</strong></a>
+<ul>
+<li class="chapter" data-level="6.5.1" data-path="data-preprocessing.html"><a href="data-preprocessing.html#merging-feature-tables"><i class="fa fa-check"></i><b>6.5.1</b> Merging feature tables</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="diversity-analyses.html"><a href="diversity-analyses.html"><i class="fa fa-check"></i><b>7</b> <strong>DIVERSITY ANALYSES</strong></a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="diversity-analyses.html"><a href="diversity-analyses.html#build-a-phylogenetic-tree"><i class="fa fa-check"></i><b>7.1</b> <strong>Build a phylogenetic tree</strong></a></li>
+<li class="chapter" data-level="7.2" data-path="diversity-analyses.html"><a href="diversity-analyses.html#generating-alpha-rarefaction-curves"><i class="fa fa-check"></i><b>7.2</b> <strong>Generating alpha rarefaction curves</strong></a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="diversity-analyses.html"><a href="diversity-analyses.html#finding-max-depth"><i class="fa fa-check"></i><b>7.2.1</b> Finding max depth</a></li>
+<li class="chapter" data-level="7.2.2" data-path="diversity-analyses.html"><a href="diversity-analyses.html#generating-the-curve"><i class="fa fa-check"></i><b>7.2.2</b> Generating the curve</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="diversity-analyses.html"><a href="diversity-analyses.html#alpha-and-beta-diversity"><i class="fa fa-check"></i><b>7.3</b> <strong>Alpha and beta diversity</strong></a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="diversity-analyses.html"><a href="diversity-analyses.html#running-diversity-analyses"><i class="fa fa-check"></i><b>7.3.1</b> Running diversity analyses</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="assigning-taxonomy.html"><a href="assigning-taxonomy.html"><i class="fa fa-check"></i><b>8</b> <strong>ASSIGNING TAXONOMY</strong></a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="assigning-taxonomy.html"><a href="assigning-taxonomy.html#classifying-asvs"><i class="fa fa-check"></i><b>8.1</b> <strong>Classifying ASV’s</strong></a>
+<ul>
+<li class="chapter" data-level="8.1.1" data-path="assigning-taxonomy.html"><a href="assigning-taxonomy.html#using-scikit-learn"><i class="fa fa-check"></i><b>8.1.1</b> Using scikit-learn</a></li>
+</ul></li>
+<li class="chapter" data-level="8.2" data-path="assigning-taxonomy.html"><a href="assigning-taxonomy.html#verifying-with-blastn"><i class="fa fa-check"></i><b>8.2</b> <strong>Verifying with BLASTn</strong></a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="assigning-taxonomy.html"><a href="assigning-taxonomy.html#filtering-contaminants"><i class="fa fa-check"></i><b>8.2.1</b> Filtering contaminants</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="assigning-taxonomy.html"><a href="assigning-taxonomy.html#grouping-feature-tables"><i class="fa fa-check"></i><b>8.3</b> <strong>Grouping feature tables</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="visualizing-taxonomic-data.html"><a href="visualizing-taxonomic-data.html"><i class="fa fa-check"></i><b>9</b> <strong>VISUALIZING TAXONOMIC DATA</strong></a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="visualizing-taxonomic-data.html"><a href="visualizing-taxonomic-data.html#exporting-data"><i class="fa fa-check"></i><b>9.1</b> <strong>Exporting data</strong></a></li>
+<li class="chapter" data-level="9.2" data-path="visualizing-taxonomic-data.html"><a href="visualizing-taxonomic-data.html#importing-q2-files-to-r"><i class="fa fa-check"></i><b>9.2</b> <strong>Importing Q2 files to R</strong></a></li>
+<li class="chapter" data-level="9.3" data-path="visualizing-taxonomic-data.html"><a href="visualizing-taxonomic-data.html#qiime2r"><i class="fa fa-check"></i><b>9.3</b> <strong>QIIME2R</strong></a>
+<ul>
+<li class="chapter" data-level="9.3.1" data-path="visualizing-taxonomic-data.html"><a href="visualizing-taxonomic-data.html#load-the-feature-table"><i class="fa fa-check"></i><b>9.3.1</b> Load the feature table</a></li>
+<li class="chapter" data-level="9.3.2" data-path="visualizing-taxonomic-data.html"><a href="visualizing-taxonomic-data.html#load-the-metadata"><i class="fa fa-check"></i><b>9.3.2</b> Load the metadata</a></li>
+<li class="chapter" data-level="9.3.3" data-path="visualizing-taxonomic-data.html"><a href="visualizing-taxonomic-data.html#load-the-taxonomic-data"><i class="fa fa-check"></i><b>9.3.3</b> Load the taxonomic data</a></li>
+<li class="chapter" data-level="9.3.4" data-path="visualizing-taxonomic-data.html"><a href="visualizing-taxonomic-data.html#parsing-taxonomic-data"><i class="fa fa-check"></i><b>9.3.4</b> Parsing taxonomic data</a></li>
+<li class="chapter" data-level="9.3.5" data-path="visualizing-taxonomic-data.html"><a href="visualizing-taxonomic-data.html#create-a-taxa-barplot"><i class="fa fa-check"></i><b>9.3.5</b> Create a taxa barplot</a></li>
+<li class="chapter" data-level="9.3.6" data-path="visualizing-taxonomic-data.html"><a href="visualizing-taxonomic-data.html#create-a-taxa-heatmap"><i class="fa fa-check"></i><b>9.3.6</b> Create a taxa heatmap</a></li>
+<li class="chapter" data-level="9.3.7" data-path="visualizing-taxonomic-data.html"><a href="visualizing-taxonomic-data.html#plot-beta-diversity"><i class="fa fa-check"></i><b>9.3.7</b> Plot beta-diversity</a></li>
+</ul></li>
+<li class="chapter" data-level="9.4" data-path="visualizing-taxonomic-data.html"><a href="visualizing-taxonomic-data.html#phyloseq"><i class="fa fa-check"></i><b>9.4</b> <strong>Phyloseq</strong></a>
+<ul>
+<li class="chapter" data-level="9.4.1" data-path="visualizing-taxonomic-data.html"><a href="visualizing-taxonomic-data.html#build-a-phyloseq-object"><i class="fa fa-check"></i><b>9.4.1</b> Build a phyloseq object</a></li>
+<li class="chapter" data-level="9.4.2" data-path="visualizing-taxonomic-data.html"><a href="visualizing-taxonomic-data.html#taxonomic-characteristics"><i class="fa fa-check"></i><b>9.4.2</b> Taxonomic characteristics</a></li>
+<li class="chapter" data-level="9.4.3" data-path="visualizing-taxonomic-data.html"><a href="visualizing-taxonomic-data.html#plot-alpha-diversity"><i class="fa fa-check"></i><b>9.4.3</b> Plot alpha-diversity</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="resources.html"><a href="resources.html"><i class="fa fa-check"></i><b>10</b> <strong>Resources:</strong></a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="resources.html"><a href="resources.html#data-in-this-analysis"><i class="fa fa-check"></i><b>10.1</b> <strong>Data in this analysis</strong></a></li>
+<li class="chapter" data-level="10.2" data-path="resources.html"><a href="resources.html#other-resources"><i class="fa fa-check"></i><b>10.2</b> <strong>Other resources</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="acknowledgments.html"><a href="acknowledgments.html"><i class="fa fa-check"></i><b>11</b> Acknowledgments</a></li>
+<li class="chapter" data-level="12" data-path="technical-support.html"><a href="technical-support.html"><i class="fa fa-check"></i><b>12</b> <strong>Technical Support</strong></a></li>
+<li class="chapter" data-level="13" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>13</b> <strong>References</strong></a>
+<ul>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html#references-1"><i class="fa fa-check"></i><strong>References</strong></a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">16S Microbiome Analysis on a Computing Cluster</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="importing-data" class="section level1 hasAnchor" number="3">
+<h1><span class="header-section-number">3</span> <strong>IMPORTING DATA</strong><a href="importing-data.html#importing-data" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>To begin importing your data onto the cluster, first make sure the files are downloaded on your computer.
+Go to Ch-10 (Resources) to download the raw data used in this analysis if you haven’t already, or follow along using your own data! You will also want to download the accompanying metadata files.</p>
+<div id="getting-organized" class="section level2 hasAnchor" number="3.1">
+<h2><span class="header-section-number">3.1</span> <strong>Getting organized</strong><a href="importing-data.html#getting-organized" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Before importing data onto the cluster, it’s nice to make sure you have a dedicated directory for all your data files. If you stay organized during your analysis you can pretty much run all your job scripts in the same directory.</p>
+<p>Make a directory to work in for this analysis</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="importing-data.html#cb16-1" tabindex="-1"></a>mkdir amplicon<span class="sc">-</span>analysis</span>
+<span id="cb16-2"><a href="importing-data.html#cb16-2" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="importing-data.html#cb16-3" tabindex="-1"></a><span class="co"># navigate to the new directory</span></span>
+<span id="cb16-4"><a href="importing-data.html#cb16-4" tabindex="-1"></a>cd amplicon<span class="sc">-</span>analysis</span>
+<span id="cb16-5"><a href="importing-data.html#cb16-5" tabindex="-1"></a></span>
+<span id="cb16-6"><a href="importing-data.html#cb16-6" tabindex="-1"></a><span class="co"># make 2 more folders called **/rawdata** and **/metadata**</span></span>
+<span id="cb16-7"><a href="importing-data.html#cb16-7" tabindex="-1"></a>mkdir rawdata</span>
+<span id="cb16-8"><a href="importing-data.html#cb16-8" tabindex="-1"></a>mkdir metadata</span>
+<span id="cb16-9"><a href="importing-data.html#cb16-9" tabindex="-1"></a></span>
+<span id="cb16-10"><a href="importing-data.html#cb16-10" tabindex="-1"></a><span class="co">#make a file for the bird fecal samples in /rawdata</span></span>
+<span id="cb16-11"><a href="importing-data.html#cb16-11" tabindex="-1"></a>mkdir rawdata<span class="sc">/</span>birds</span>
+<span id="cb16-12"><a href="importing-data.html#cb16-12" tabindex="-1"></a></span>
+<span id="cb16-13"><a href="importing-data.html#cb16-13" tabindex="-1"></a><span class="co">#make a file for the sediment samples in /rawdata</span></span>
+<span id="cb16-14"><a href="importing-data.html#cb16-14" tabindex="-1"></a>mkdir rawdata<span class="sc">/</span>sediments</span></code></pre></div>
+<p>Check to make sure the new folders are there using the<code>ls</code> command</p>
+</div>
+<div id="moving-data-to-the-cluster" class="section level2 tabset hasAnchor" number="3.2">
+<h2><span class="header-section-number">3.2</span> <strong>Moving data to the cluster</strong><a href="importing-data.html#moving-data-to-the-cluster" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Transferring data onto the cluster from your local computer desktop can be done using the safe file transfer protocol (SFTP). To do this, first exit the cluster and re-enter the using the following safe file transfer protocol (SFTP) command:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="importing-data.html#cb17-1" tabindex="-1"></a><span class="co">#first exit the cluster if you are still signed in</span></span>
+<span id="cb17-2"><a href="importing-data.html#cb17-2" tabindex="-1"></a>exit</span>
+<span id="cb17-3"><a href="importing-data.html#cb17-3" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="importing-data.html#cb17-4" tabindex="-1"></a><span class="co">#now sign in using the SFTP command</span></span>
+<span id="cb17-5"><a href="importing-data.html#cb17-5" tabindex="-1"></a>sftp <span class="st">&#39;username&#39;</span><span class="sc">@</span>graham.computecanada.ca</span>
+<span id="cb17-6"><a href="importing-data.html#cb17-6" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="importing-data.html#cb17-7" tabindex="-1"></a><span class="co"># Now, move to the amplicon-analysis directory using the &#39;cd&#39; command</span></span>
+<span id="cb17-8"><a href="importing-data.html#cb17-8" tabindex="-1"></a>cd projects<span class="sc">/</span><span class="st">&#39;PI-profile&#39;</span><span class="sc">/</span><span class="st">&#39;username&#39;</span><span class="sc">/</span>amplicon<span class="sc">-</span>analysis</span></code></pre></div>
+<p>Next, navigate to the folder on your local computer where the raw data file <code>raw-data.zip</code> is stored, usually in a .zip or .gz format. <strong>To run a command in our local computer, always start the command with the letter <code>l</code>, like this:</strong></p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="importing-data.html#cb18-1" tabindex="-1"></a><span class="co">#print contents of the rawdata folder on your local computer</span></span>
+<span id="cb18-2"><a href="importing-data.html#cb18-2" tabindex="-1"></a>lcd <span class="sc">&lt;</span>local path to folder containg .FASTQ files<span class="sc">&gt;</span></span></code></pre></div>
+<p><strong>To move files from your local computer to the cluster:</strong> <code>put &lt;filename&gt;</code>
+<strong>To move files from the cluster to your local computer:</strong> <code>get &lt;filename&gt;</code></p>
+<blockquote>
+<p>For example. in order to transfer the files from a local computer into a user directory on the cluster, use the command <code>put</code> with a wildcard expression to move all the <code>.FASTQ.GZ</code> files in the local directory. To later transfer the QIIME artifacts created in this analysis from the remote computer to our local computer, the <code>get</code> command is used.</p>
+</blockquote>
+<p>The <code>/amplicon-analysis</code> directory should contain a <code>/rawdata</code> folder at this point to move the raw data files into.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="importing-data.html#cb19-1" tabindex="-1"></a><span class="co">#if you want to transfer the zipped folders into the /rawdata directory on the cluster:</span></span>
+<span id="cb19-2"><a href="importing-data.html#cb19-2" tabindex="-1"></a>put rawdata<span class="sc">-</span>birds.zip rawdata</span>
+<span id="cb19-3"><a href="importing-data.html#cb19-3" tabindex="-1"></a>put rawdata<span class="sc">-</span>sediments.zip rawdata</span>
+<span id="cb19-4"><a href="importing-data.html#cb19-4" tabindex="-1"></a></span>
+<span id="cb19-5"><a href="importing-data.html#cb19-5" tabindex="-1"></a><span class="co">#check to make sure all the files are properly transferred to the cluster</span></span>
+<span id="cb19-6"><a href="importing-data.html#cb19-6" tabindex="-1"></a>ls rawdata<span class="sc">/</span>rawdata<span class="sc">-</span>birds</span>
+<span id="cb19-7"><a href="importing-data.html#cb19-7" tabindex="-1"></a>ls rawdata<span class="sc">/</span>rawdata<span class="sc">-</span>sediments</span></code></pre></div>
+<blockquote>
+<p><strong>NOTE:</strong>
+* Use an astericks (<em>) as a “wildcard” in any regular expression to include multiple files in one command, or avoid writing the full filename over and over again while running commands (see the <code>put</code> command below)
+</em> You can check that you’re in the right directory using the <code>pwd</code> or <code>lpwd</code> command</p>
+</blockquote>
+<p>After downloading all of the metadata files from the <a href="https://github.com/johannabosch/QIIME2_for_Graham">Github repo</a>, transfer them over to the cluster like this:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="importing-data.html#cb20-1" tabindex="-1"></a><span class="co">#transfer the metadata files</span></span>
+<span id="cb20-2"><a href="importing-data.html#cb20-2" tabindex="-1"></a>lcd <span class="sc">&lt;</span>path to metadata files on local computer<span class="sc">&gt;</span></span>
+<span id="cb20-3"><a href="importing-data.html#cb20-3" tabindex="-1"></a>  </span>
+<span id="cb20-4"><a href="importing-data.html#cb20-4" tabindex="-1"></a>cd <span class="sc">&lt;</span>path to amplicon<span class="sc">-</span>analysis directory<span class="sc">&gt;</span></span>
+<span id="cb20-5"><a href="importing-data.html#cb20-5" tabindex="-1"></a>  </span>
+<span id="cb20-6"><a href="importing-data.html#cb20-6" tabindex="-1"></a>put metadata<span class="sc">*</span> metadata<span class="sc">/</span></span>
+<span id="cb20-7"><a href="importing-data.html#cb20-7" tabindex="-1"></a></span>
+<span id="cb20-8"><a href="importing-data.html#cb20-8" tabindex="-1"></a><span class="do">## OUTPUT:</span></span>
+<span id="cb20-9"><a href="importing-data.html#cb20-9" tabindex="-1"></a>  </span>
+<span id="cb20-10"><a href="importing-data.html#cb20-10" tabindex="-1"></a>Uploading metadata<span class="sc">-</span>birds.csv to <span class="sc">/</span>project<span class="sc">/</span><span class="dv">6000879</span><span class="sc">/</span>jlb686<span class="sc">/</span>amplicon<span class="sc">-</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>metadata<span class="sc">/</span>metadata<span class="sc">-</span>birds.csv</span>
+<span id="cb20-11"><a href="importing-data.html#cb20-11" tabindex="-1"></a>metadata<span class="sc">-</span>birds.csv                                    <span class="dv">100</span>%  <span class="dv">585</span>     <span class="fl">8.9</span>KB<span class="sc">/</span>s   <span class="dv">00</span><span class="sc">:</span><span class="dv">00</span></span>
+<span id="cb20-12"><a href="importing-data.html#cb20-12" tabindex="-1"></a>Uploading metadata<span class="sc">-</span>grouped.csv to <span class="sc">/</span>project<span class="sc">/</span><span class="dv">6000879</span><span class="sc">/</span>jlb686<span class="sc">/</span>amplicon<span class="sc">-</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>metadata<span class="sc">/</span>metadata<span class="sc">-</span>grouped.csv</span>
+<span id="cb20-13"><a href="importing-data.html#cb20-13" tabindex="-1"></a>metadata<span class="sc">-</span>grouped.csv                                  <span class="dv">100</span>%  <span class="dv">254</span>     <span class="fl">5.0</span>KB<span class="sc">/</span>s   <span class="dv">00</span><span class="sc">:</span><span class="dv">00</span></span>
+<span id="cb20-14"><a href="importing-data.html#cb20-14" tabindex="-1"></a>Uploading metadata<span class="sc">-</span>sediments.csv to <span class="sc">/</span>project<span class="sc">/</span><span class="dv">6000879</span><span class="sc">/</span>jlb686<span class="sc">/</span>amplicon<span class="sc">-</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>metadata<span class="sc">/</span>metadata<span class="sc">-</span>sediments.csv</span>
+<span id="cb20-15"><a href="importing-data.html#cb20-15" tabindex="-1"></a>metadata<span class="sc">-</span>sediments.csv                                <span class="dv">100</span>%  <span class="dv">537</span>     <span class="fl">4.6</span>KB<span class="sc">/</span>s   <span class="dv">00</span><span class="sc">:</span><span class="dv">00</span></span>
+<span id="cb20-16"><a href="importing-data.html#cb20-16" tabindex="-1"></a>Uploading metadata.csv to <span class="sc">/</span>project<span class="sc">/</span><span class="dv">6000879</span><span class="sc">/</span>jlb686<span class="sc">/</span>amplicon<span class="sc">-</span>data<span class="sc">/</span>amplicon<span class="sc">-</span>analysis<span class="sc">/</span>metadata<span class="sc">/</span>metadata.csv</span>
+<span id="cb20-17"><a href="importing-data.html#cb20-17" tabindex="-1"></a>metadata.csv                                          <span class="dv">100</span>%  <span class="dv">992</span>    <span class="fl">21.2</span>KB<span class="sc">/</span>s   <span class="dv">00</span><span class="sc">:</span><span class="dv">00</span></span>
+<span id="cb20-18"><a href="importing-data.html#cb20-18" tabindex="-1"></a></span>
+<span id="cb20-19"><a href="importing-data.html#cb20-19" tabindex="-1"></a><span class="co"># check to make sure files are there </span></span>
+<span id="cb20-20"><a href="importing-data.html#cb20-20" tabindex="-1"></a>ls metadata</span>
+<span id="cb20-21"><a href="importing-data.html#cb20-21" tabindex="-1"></a></span>
+<span id="cb20-22"><a href="importing-data.html#cb20-22" tabindex="-1"></a><span class="do">## OUTPUT:</span></span>
+<span id="cb20-23"><a href="importing-data.html#cb20-23" tabindex="-1"></a>metadata<span class="sc">-</span>birds.csv      metadata<span class="sc">-</span>grouped.csv    metadata<span class="sc">-</span>sediments.csv  metadata.csv</span></code></pre></div>
+<p>To proceed to the next steps, exit SFTP, log back into the cluster using <code>ssh</code>, and navigate back to your working directory</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="importing-data.html#cb21-1" tabindex="-1"></a>exit</span>
+<span id="cb21-2"><a href="importing-data.html#cb21-2" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="importing-data.html#cb21-3" tabindex="-1"></a>ssh jlb686<span class="sc">@</span>graham.computecanada.ca</span>
+<span id="cb21-4"><a href="importing-data.html#cb21-4" tabindex="-1"></a></span>
+<span id="cb21-5"><a href="importing-data.html#cb21-5" tabindex="-1"></a>cd projects<span class="sc">/</span><span class="st">&#39;PI-profile&#39;</span><span class="sc">/</span><span class="st">&#39;username&#39;</span><span class="sc">/</span>amplicon<span class="sc">-</span>analysis</span></code></pre></div>
+</div>
+<div id="organizing-.fastq-files" class="section level2 hasAnchor" number="3.3">
+<h2><span class="header-section-number">3.3</span> <strong>Organizing .FASTQ files</strong><a href="importing-data.html#organizing-.fastq-files" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="unzip-rawdata-files" class="section level3 hasAnchor" number="3.3.1">
+<h3><span class="header-section-number">3.3.1</span> Unzip rawdata files<a href="importing-data.html#unzip-rawdata-files" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>If you need to unzip your compressed rawdata folder on the cluster, use the following command:</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="importing-data.html#cb22-1" tabindex="-1"></a>unzip rawdata<span class="sc">/</span><span class="er">&lt;</span>filename<span class="sc">&gt;</span>.zip <span class="co">#replace &lt;filename&gt; with your file</span></span></code></pre></div>
+<p>Unzip the rawdata files for the bird and sediment samples.</p>
+<p>If you want to see a portion of what is in one of the <code>.fastq.gz</code> rawdata files, you can use the following command:</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="importing-data.html#cb23-1" tabindex="-1"></a>zcat rawdata<span class="sc">/</span>birds<span class="sc">/</span>ATPU01_S125_L001_R1_001.fastq.gz <span class="sc">|</span> head</span></code></pre></div>
+<p>Check to make sure the files are in the correct folders using the <code>ls</code> command. Here I ran the command so that if you are working with my files you can see what the output should look like:</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="importing-data.html#cb24-1" tabindex="-1"></a>ls rawdata<span class="sc">/</span>birds</span>
+<span id="cb24-2"><a href="importing-data.html#cb24-2" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="importing-data.html#cb24-3" tabindex="-1"></a><span class="do">## OUTPUT:</span></span>
+<span id="cb24-4"><a href="importing-data.html#cb24-4" tabindex="-1"></a></span>
+<span id="cb24-5"><a href="importing-data.html#cb24-5" tabindex="-1"></a>ATPU01_S125_L001_R1_001.fastq.gz  COMU<span class="sc">-</span>42_S185_L001_R1_001.fastq.gz</span>
+<span id="cb24-6"><a href="importing-data.html#cb24-6" tabindex="-1"></a>ATPU01_S125_L001_R2_001.fastq.gz  COMU<span class="sc">-</span>42_S185_L001_R2_001.fastq.gz</span>
+<span id="cb24-7"><a href="importing-data.html#cb24-7" tabindex="-1"></a>ATPU02_S137_L001_R1_001.fastq.gz  COMU43_S102_L001_R1_001.fastq.gz</span>
+<span id="cb24-8"><a href="importing-data.html#cb24-8" tabindex="-1"></a>ATPU02_S137_L001_R2_001.fastq.gz  COMU43_S102_L001_R2_001.fastq.gz</span>
+<span id="cb24-9"><a href="importing-data.html#cb24-9" tabindex="-1"></a>ATPU03_S149_L001_R1_001.fastq.gz  COMU44_S114_L001_R1_001.fastq.gz</span>
+<span id="cb24-10"><a href="importing-data.html#cb24-10" tabindex="-1"></a>ATPU03_S149_L001_R2_001.fastq.gz  COMU44_S114_L001_R2_001.fastq.gz</span>
+<span id="cb24-11"><a href="importing-data.html#cb24-11" tabindex="-1"></a>ATPU56_S161_L001_R1_001.fastq.gz  COMU46_S126_L001_R1_001.fastq.gz</span>
+<span id="cb24-12"><a href="importing-data.html#cb24-12" tabindex="-1"></a>ATPU56_S161_L001_R2_001.fastq.gz  COMU46_S126_L001_R2_001.fastq.gz</span>
+<span id="cb24-13"><a href="importing-data.html#cb24-13" tabindex="-1"></a>ATPU58_S173_L001_R1_001.fastq.gz  NOGA27_S100_L001_R1_001.fastq.gz</span>
+<span id="cb24-14"><a href="importing-data.html#cb24-14" tabindex="-1"></a>ATPU58_S173_L001_R2_001.fastq.gz  NOGA27_S100_L001_R2_001.fastq.gz</span>
+<span id="cb24-15"><a href="importing-data.html#cb24-15" tabindex="-1"></a>BLKI01_S160_L001_R1_001.fastq.gz  NOGA30_S112_L001_R1_001.fastq.gz</span>
+<span id="cb24-16"><a href="importing-data.html#cb24-16" tabindex="-1"></a>BLKI01_S160_L001_R2_001.fastq.gz  NOGA30_S112_L001_R2_001.fastq.gz</span>
+<span id="cb24-17"><a href="importing-data.html#cb24-17" tabindex="-1"></a>BLKI02_S172_L001_R1_001.fastq.gz  NOGA31_S124_L001_R1_001.fastq.gz</span>
+<span id="cb24-18"><a href="importing-data.html#cb24-18" tabindex="-1"></a>BLKI02_S172_L001_R2_001.fastq.gz  NOGA31_S124_L001_R2_001.fastq.gz</span>
+<span id="cb24-19"><a href="importing-data.html#cb24-19" tabindex="-1"></a>BLKI03_S184_L001_R1_001.fastq.gz  NOGA32_S136_L001_R1_001.fastq.gz</span>
+<span id="cb24-20"><a href="importing-data.html#cb24-20" tabindex="-1"></a>BLKI03_S184_L001_R2_001.fastq.gz  NOGA32_S136_L001_R2_001.fastq.gz</span>
+<span id="cb24-21"><a href="importing-data.html#cb24-21" tabindex="-1"></a>BLKI04_S101_L001_R1_001.fastq.gz  NOGA33_S148_L001_R1_001.fastq.gz</span>
+<span id="cb24-22"><a href="importing-data.html#cb24-22" tabindex="-1"></a>BLKI04_S101_L001_R2_001.fastq.gz  </span>
+<span id="cb24-23"><a href="importing-data.html#cb24-23" tabindex="-1"></a>BLKI05_S113_L001_R1_001.fastq.gz</span>
+<span id="cb24-24"><a href="importing-data.html#cb24-24" tabindex="-1"></a>BLKI05_S113_L001_R2_001.fastq.gz</span>
+<span id="cb24-25"><a href="importing-data.html#cb24-25" tabindex="-1"></a></span>
+<span id="cb24-26"><a href="importing-data.html#cb24-26" tabindex="-1"></a>___</span>
+<span id="cb24-27"><a href="importing-data.html#cb24-27" tabindex="-1"></a></span>
+<span id="cb24-28"><a href="importing-data.html#cb24-28" tabindex="-1"></a>ls rawdata<span class="sc">/</span>sediments</span>
+<span id="cb24-29"><a href="importing-data.html#cb24-29" tabindex="-1"></a></span>
+<span id="cb24-30"><a href="importing-data.html#cb24-30" tabindex="-1"></a><span class="do">## OUTPUT:</span></span>
+<span id="cb24-31"><a href="importing-data.html#cb24-31" tabindex="-1"></a>FOGO12_S140_L001_R1_001.fastq.gz  REF12_S175_L001_R1_001.fastq.gz</span>
+<span id="cb24-32"><a href="importing-data.html#cb24-32" tabindex="-1"></a>FOGO12_S140_L001_R2_001.fastq.gz  REF12_S175_L001_R2_001.fastq.gz</span>
+<span id="cb24-33"><a href="importing-data.html#cb24-33" tabindex="-1"></a>FOGO1_S187_L001_R1_001.fastq.gz   REF1_S127_L001_R1_001.fastq.gz</span>
+<span id="cb24-34"><a href="importing-data.html#cb24-34" tabindex="-1"></a>FOGO1_S187_L001_R2_001.fastq.gz   REF1_S127_L001_R2_001.fastq.gz</span>
+<span id="cb24-35"><a href="importing-data.html#cb24-35" tabindex="-1"></a>FOGO2_S104_L001_R1_001.fastq.gz   REF2_S139_L001_R1_001.fastq.gz</span>
+<span id="cb24-36"><a href="importing-data.html#cb24-36" tabindex="-1"></a>FOGO2_S104_L001_R2_001.fastq.gz   REF2_S139_L001_R2_001.fastq.gz</span>
+<span id="cb24-37"><a href="importing-data.html#cb24-37" tabindex="-1"></a>FOGO4_S116_L001_R1_001.fastq.gz   REF4_S151_L001_R1_001.fastq.gz</span>
+<span id="cb24-38"><a href="importing-data.html#cb24-38" tabindex="-1"></a>FOGO4_S116_L001_R2_001.fastq.gz   REF4_S151_L001_R2_001.fastq.gz</span>
+<span id="cb24-39"><a href="importing-data.html#cb24-39" tabindex="-1"></a>FOGO6_S128_L001_R1_001.fastq.gz   REF8_S163_L001_R1_001.fastq.gz</span>
+<span id="cb24-40"><a href="importing-data.html#cb24-40" tabindex="-1"></a>FOGO6_S128_L001_R2_001.fastq.gz   REF8_S163_L001_R2_001.fastq.gz</span>
+<span id="cb24-41"><a href="importing-data.html#cb24-41" tabindex="-1"></a>IMP12_S115_L001_R1_001.fastq.gz</span>
+<span id="cb24-42"><a href="importing-data.html#cb24-42" tabindex="-1"></a>IMP12_S115_L001_R2_001.fastq.gz</span>
+<span id="cb24-43"><a href="importing-data.html#cb24-43" tabindex="-1"></a>IMP1_S162_L001_R1_001.fastq.gz</span>
+<span id="cb24-44"><a href="importing-data.html#cb24-44" tabindex="-1"></a>IMP1_S162_L001_R2_001.fastq.gz</span>
+<span id="cb24-45"><a href="importing-data.html#cb24-45" tabindex="-1"></a>IMP2_S174_L001_R1_001.fastq.gz</span>
+<span id="cb24-46"><a href="importing-data.html#cb24-46" tabindex="-1"></a>IMP2_S174_L001_R2_001.fastq.gz</span>
+<span id="cb24-47"><a href="importing-data.html#cb24-47" tabindex="-1"></a>IMP4_S186_L001_R1_001.fastq.gz</span>
+<span id="cb24-48"><a href="importing-data.html#cb24-48" tabindex="-1"></a>IMP4_S186_L001_R2_001.fastq.gz</span>
+<span id="cb24-49"><a href="importing-data.html#cb24-49" tabindex="-1"></a>IMP<span class="sc">-</span>8_S103_L001_R1_001.fastq.gz</span>
+<span id="cb24-50"><a href="importing-data.html#cb24-50" tabindex="-1"></a>IMP<span class="sc">-</span>8_S103_L001_R2_001.fastq.gz</span></code></pre></div>
+<hr />
+ 
+<hr />
+<p style="text-align: center;">
+Github: <a href="https://github.com/johannabosch">johannabosch</a> </a>
+</p>
+<p style="text-align: center;">
+<span style="color: #808080;"><em><a href="mailto:yohannabosch@gmail.com" class="email">yohannabosch@gmail.com</a></em></span>
+</p>
+<!-- Add icon library -->
+<p><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></p>
+<!-- Add font awesome icons -->
+<p style="text-align: center;">
+<a href="https://www.instagram.com/yohannabosch/" class="fa fa-instagram"></a>
+<a href="https://www.linkedin.com/in/yan-holtz-2477534a/" class="fa fa-linkedin"></a>
+<a href="https://github.com/johannabosch/" class="fa fa-github"></a>
+</p>
+<p> </p>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="compute-canada-basics.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="qiime2-on-the-cluster.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/USERNAME/REPO/edit/BRANCH/03-ImportingData.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["_main.pdf", "_main.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>
