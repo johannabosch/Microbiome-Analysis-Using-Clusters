@@ -1,0 +1,224 @@
+# **COMPUTE CANADA BASICS**
+
+This research was enabled by support provided by the [Digital Research Alliance of Canada](www.computecanada.ca). The following section reviews the basics of accessing and using the Graham cluster.  To conduct this analysis a user account for the Graham cluster has to be created and verified by the PI of the account. You can read more about applying for an account with the Digital Research Alliance here: [https://www.computecanada.ca/research-portal/account-management/apply-for-an-account/]
+
+## **Cluster computing basics** {.tabset}
+The following is a brief review of the ins-and-outs of using the cluster on your command terminal and the commands used often in this analysis.
+
+### Signing into the cluster
+
+To begin using the cluster, open your command prompt or terminal and sign into the Graham cluster
+
+```{r, eval=FALSE}
+#use an `ssh` command to log-in and press enter
+ssh 'username'@graham.computecanada.ca
+
+# type in the invisible password and press Enter
+```
+
+**NOTE:** Replace `'username'` in the above command, for example `janesmith@graham.computecananda.ca`
+
+### Basic computing commands
+
+Your user directory can be found within your PI's project file, which typically begins with the `def-` prefix, like this:
+
+```{r, eval=FALSE}
+#use the cd command to move to your user directory
+cd projects/'PI-profile'/'username'
+
+#to move up to the parent directory, use ..
+cd ..
+
+#to copy a directory named 'rawdata' use cp
+cp projects/'PI-profile'/'username'/rawdata
+```
+
+> **NOTE:**You can press the `TAB` button while writing a file path to complete a path name, or double tap to show a list of options in the working directory
+
+
+**DANGER ZONE** 
+Use these commands to delete files cautiously:
+
+```{r, eval=FALSE}
+#to remove a file called 'metadata.txt' from a directory use rm
+rm projects/"<PI-project-profile-name">/<"username">/rawdata/metadata/metadata.txt
+
+#to remove a directory called 'metadata' use rm -r
+rm -r projects/"<PI-project-profile-name">/<"username">/metadata
+```
+
+### Loading modules
+
+Many softwares are already installed on the cluster and can be used by loading modules - sometimes multiple modules have to be loaded first. To view a list of available softwares visit the Alliance (Available Software - Wiki page)[https://docs.alliancecan.ca/wiki/Available_software]
+
+You should always specify the version of the software you want to load, and this will require you to pull a list of all the versions available on the cluster. To load a module, use the following command(s):
+
+```{r, eval=FALSE}
+module load 'module-name/0.0.0'
+
+# To see what modules need to be loaded for a software or tool, use:
+module spider 'module-name/0.0.0'
+  
+  # For example, to see what other modules need to be loaded to run python, use:
+  module spider python/3.11.2
+```
+
+To see what versions of python are offered on Graham, exclude the version:
+```{r, eval=FALSE}
+module spider python
+```
+
+View the output of running `module spider python/3.11.2` below. The output gives you a description of the module, and a properties section which lists other modules you will need, in this case `StdEnv/2020`. It then lists the extensions that are provided by python (v3/.11.2) - keep in mind that sometimes older versions of a tool will offer different extensions.
+
+[OUTPUT]:
+
+    -------------------------------------------------------------------------------------
+    python: python/3.11.2
+    -------------------------------------------------------------------------------------
+    Description:
+      Python is a programming language that lets you work more quickly and
+      integrate your systems more effectively.
+
+    Properties:
+      Tools for development / Outils de développement
+
+    You will need to load all module(s) on any one of the lines below before the 
+    "python/3.11.2" module is available to load.
+
+      StdEnv/2020
+
+    This module provides the following extensions:
+
+       distlib/0.3.6 (E), editables/0.3 (E), filelock/3.9.0 (E), flit_core/3.8.0 (E),
+       hatch_vcs/0.3.0 (E), hatchling/1.13.0 (E), packaging/23.0 (E), pathspec/0.11.0 (E),
+       pip/23.0 (E), platformdirs/2.6.2 (E), pluggy/1.0.0 (E), pyparsing/3.0.9 (E),
+       setuptools/63.4.3 (E), setuptools_scm/7.1.0 (E), six/1.16.0 (E), tomli/2.0.1 (E),
+       typing_extensions/4.5.0 (E), virtualenv/20.16.3 (E), wheel/0.38.4 (E)
+
+    Help:
+      Description
+      ===========
+      Python is a programming language that lets you work more quickly and
+      integrate your systems more effectively.
+
+
+      More information
+      ================
+       - Homepage: https://python.org/
+
+
+      Included extensions
+      ===================
+      distlib-0.3.6, editables-0.3, filelock-3.9.0, flit_core-3.8.0,
+      hatch_vcs-0.3.0, hatchling-1.13.0, packaging-23.0, pathspec-0.11.0, pip-23.0,
+      platformdirs-2.6.2, pluggy-1.0.0, pyparsing-3.0.9, setuptools-63.4.3,
+      setuptools_scm-7.1.0, six-1.16.0, tomli-2.0.1, typing_extensions-4.5.0,
+      virtualenv-20.16.3, wheel-0.38.4
+   
+   
+## **Job scripts ** {.tabset}
+
+A *job* is a set of commands written in a bash script (a small text file containing commands which specify what tools to run, the input files, and the output files. Job scripts are used on computing clusters to run commands and use various tools. 
+
+A bash script is really just a plain text file containing a series of commands and instructions written in the Bash programming language, which is the default shell for many Unix-like operating systems, including the Graham cluster. To indicate that a file should be interpreted as a Bash script, it typically begins with the shebang line #!/bin/bash, which specifies the path to the Bash interpreter. This line informs the system how to execute the script,
+
+From the Digital Research Alliance Wiki:
+> According to Compute Canada's user code, a job script must be submitted to the cluster's scheduler. Any and all processes should not be run on compute nodes except via the scheduler (any tasks that consume more than 10 CPU-minutes and approx. 4GB of ram).
+
+
+### Using Nano
+
+Bash scripts can be written in nano, a text editor hosted on the cluster.
+
+> For example, to write a script called `copy-file.sh` in nano that will copy the file `/metadata-birds.csv` to the main directory, use the following:
+
+```{r, eval=FALSE}
+# Open nano using the following command:
+nano copy-file.sh
+```
+
+**Here are some basics about using nano:**
+
+* a navigation menu will pop up at the bottom of your terminal
+* you can paste code into nano using `CTRL+V` or by right clicking
+
+### Writing a bash script
+
+Each script begins with **'##!/bin/bash'**. You can specify how much time the job will take and how much memory will be needed. You can also specify which allocation to run the job on, the number of compute nodes the job needs, and more. Typically, bash scripts are named with a `.sh` suffix. When it comes to memory, unfortunately Slurm interprets K, M, G, etc., as binary prefixes, so a `--mem=125G` is actually equivalent to `--mem=128000M`. 
+
+Even though we would usually just copy files directly in the working directory, here is an example of a simple job script that would copy the file `metadata-birds.csv` to the main working directory (`/amplicon-analysis`):
+
+```{r, eval=FALSE}
+#!/bin/bash
+#SBATCH --time=01:00:00
+#SBATCH --mem=1GB
+
+cp /metadata/metadata-birds.csv metadata-birds-copy.csv
+```
+
+Once the script is written, you can press **ctrl + X**, name the script if you did not do it earlier when starting nano, save and exit. Usually scripts are named ending with `.sh` suffix.
+
+### Running scripts on the scheduler
+
+To run the script on the scheduler use an sbatch command followed by your file name (the output will display a JOBID if it runs correctly):
+
+```{r, eval=FALSE}
+sbatch copy-file.sh
+```
+
+[OUTPUT]:
+```{r, eval=FALSE}
+Submitted batch job 7365672
+```
+
+Here are some other important commands to know:
+
+```{r, eval=FALSE}
+# to check the status of your job
+sq -u 'username'
+
+# to cancel a job that is being run (specify the JOBID)
+scancel 7365672
+```
+
+**NOTE**: to find out how much memory a job takes up so you can adjust your memory parameters in the future, use the `seff` command with the JOBID:
+
+```{r, eval=FALSE}
+seff 7365672
+```
+
+Every time you submit a job, a slurm file is created with the output of your job in your working directory. To view the results of your job script view the new slurm file in your working directory.
+
+```{r, eval=FALSE}
+ls
+
+view <"slurm file name">
+```
+
+When finished writing and running your job script, save it to a separate working directory called /scripts
+
+```{r, eval=FALSE}
+mkdir scripts
+mv <copy-file.sh /scripts
+```
+
+**TIP:** delete your slurm files each time one is created, this way when you want to view your job's output more easily all you will have to type in your working directory is view slurm*
+
+___
+
+&nbsp;
+<hr />
+<p style="text-align: center;">Github: [johannabosch](https://github.com/johannabosch) </a></p>
+<p style="text-align: center;"><span style="color: #808080;"><em>yohannabosch@gmail.com</em></span></p>
+
+<!-- Add icon library -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<!-- Add font awesome icons -->
+<p style="text-align: center;">
+    <a href="https://www.instagram.com/yohannabosch/" class="fa fa-instagram"></a>
+    <a href="https://www.linkedin.com/in/yan-holtz-2477534a/" class="fa fa-linkedin"></a>
+    <a href="https://github.com/johannabosch/" class="fa fa-github"></a>
+</p>
+
+&nbsp;

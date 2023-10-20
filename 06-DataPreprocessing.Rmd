@@ -1,0 +1,492 @@
+# **DATA PREPROCESSING**
+
+Before conducting any further analysis such as assigning taxonomy to read files, it is important to conduct a few pre-processing steps on your files to clean up the data.
+
+Here are the 4 basic data pre-processing steps to follow:
+  1 - Data quality assessment
+  2 - Data cleaning
+  3 - Data transformation
+  4 - Data reduction
+  
+## **Quality assessment**
+
+Inspecting the quality of the .FASTQ files is very important. You must inspect the quality of your data (phred score, number of unique to duplicate reads per file, number of total reads, GC content, etc.) before running any analysis so you can consider the data quality throughout all aspects of the analysis. If you want to inspect data sets that contain multiple samples, Fit's nice to be able to review all the samples together - this also makes it easier to understand what methods may or may not be working for sequencing/library prep. Here, we use 2 tools for quality checking multiple samples at once:
+
+* FastQC [6] to inspect the read quality of each sample file individually (R1 and R2)
+
+* MultiQC [7] to visualize data quality for all the samples together
+
+### FastQC 
+
+First, inspect the read quality of each sample individually. Here I separated the quality check for seabird fecal samples and sediment samples. Create a directory in both `/rawdata/birds` and `rawdata/sediments` called `fastqc_out` 
+
+```{r, eval=FALSE}
+# navigate to the main directory 
+mkdir rawdata/birds/fastqc_out
+mkdir rawdata/sediments/fastqc_out
+
+```
+
+Run the fastqc command by opening nano and writing a script:
+
+**NOTE:** make sure to use the newest version of the fastqc module (in this case v0.11.9). Use `module spider fastqc` to view available versions.
+
+[copy and paste the following batch script into nano and then edit accordingly]
+```{r, eval=FALSE}
+#!/bin/bash
+#SBATCH --time=
+#SBATCH --account=<group-name>
+#SBATCH --mem=
+
+module load StdEnv/2020 fastqc/0.11.9
+
+#run the quality check on bird samples
+fastqc rawdata/birds/*.fastq.gz rawdata/birds/fastqc_out
+
+#run the quality check on sediment samples
+fastqc rawdata/sediments/*.fastq.gz rawdata/sediments/fastqc_out
+
+```
+
+Save the script as `fastqc.sh` and run the job script using the sbatch command:
+```{r, eval=FALSE}
+sbatch fastqc.sh
+
+# view the output of the job
+view slurm-'jobID'
+
+# view the files in the new directories
+ls rawdata/birds/fastqc_out
+ls rawdata/sediments/fastqc_out
+```
+
+**NOTE**: When you finish running a job, and have looked at the output slurm file to verify that the command performed well, then you can delete the slurm file using the `rm slurm*` command. Otherwise your slurm files will build up over time and it will be confusing!
+
+
+### MultiQC
+
+Next, I inspected read quality of all the samples together using the following MultiQC commands on both birds and sediments. I specified the output to the file with the `-o` argument, to the `rawdata/birds` and `rawdata/sediments` directories. To install MultiQC load python and load a virtual environment within your job script, like this: 
+
+```{r, eval=FALSE}
+#!/bin/bash
+#SBATCH --time=
+#SBATCH --account=<group-name>
+#SBATCH --mem=
+
+module load python
+
+# load a virtual environment
+virtualenv ~/my_venv
+source ~/my_venv/bin/activate
+
+# use pip to install MultiQC
+pip install --no-index multiqc
+
+# run the MultiQC commands
+multiqc rawdata/birds/fastqc_out/ -o rawdata/birds/
+multiqc rawdata/sediments/fastqc_out/ -o rawdata/sediments
+```
+
+Save the script as 'multiqc.sh', and run it using the sbatch command:
+```{r, eval=FALSE}
+sbatch multiqc.sh
+
+# check to make sure the multiqc files were generated properly
+ls rawdata/birds/fastqc_out
+ls rawdata/sediments/fastqc_out
+```
+
+A `multiqc_data` directory and `multiqc_report.html` will be created when running this command. At this point, the HTML version of the MultiQC report can be exported onto a local computer using SFTP to visualize the quality of the data on a web browser.
+
+```{r, eval=FALSE}
+# exit the cluster and re-enter through the sftp
+exit
+sftp 'username'@graham.computecanada.ca
+
+#move to a file on your local directory where you want to keep the quality data files 
+lcd Desktop/
+
+#get the files from the **amplicon-analysis/rawdata** directory, name them accordingly
+get amplicon-analysis/rawdata/birds/fastqc_out/multiqc_report.html multiqc_report_birds.html
+get amplicon-data/rawdata/sediments/fastqc_out/multiqc_report.html multiqc_report_sediments.html
+```
+
+Exit SFTP and proceed to visualizing the quality of your data
+
+### Visualizing data quality
+Navigate to the files on your local computer and open the data files via your chosen web browser.
+
+### Plot types
+
+MultiQC report files contain several different ways of interpreting data quality, including plots for. To view some helpful interpretations of these plots, visit ()[]. 
+
+### For this study
+
+We pulled 2 important files from the cluster onto our local computer, the `multiqc_report_sediments.html` and `multiqc_report_birds.html`. 
+
+The quality of the data used in this analysis is reviewed in Bosch **[1]**, but there are a few things to keep in mind:
+
+* Overall these samples have a decent quality, as exhibited by Phred scores in the **Mean Quality Scores** plot, which shows that most of the R2 files are above 20 up to approx. 240 bp. Keep this information in mind when trimming the read files later on based on sequence quality.
+
+* There is a high percentage of duplicate reads across both sediment and bird samples, which is something to keep in mind for downstream analysis. This can usually be cleaned up by removing contaminants, filtering ASVs and rarefying the data for certain diversity analyses.
+
+* GC content for these data should be between 40 - 60%, here it hovers around 50 - 55% between samples
+
+## **Data Cleaning**
+
+Once the sequencing data was imported to an artifact file, all the primer sequences (and all the reads without primer sequences) can be removed from reads corresponding to the *16S* V4/V5 regions (Forward:GTGYCAGCMGCCGCGGTAA, Reverse: CCGYCAATTYMTTTRAGTTT) using the q2-cutadapt plug-in [8].
+
+
+### Trimming primers
+
+The QIIME2 cut-adapt plug-in **[8]** allows you to work with the adapter sequences within your files. To begin, make sure you're logged back in to the cluster and in the main directory (`/amplicon-analysis`). Copy and paste the job script to nano and call it `trimming_birds.sh`:
+
+```{r, eval=FALSE}
+#!/bin/bash
+#SBATCH --time=
+#SBATCH --account=<group-ID>
+#SBATCH --mem=
+
+export APPTAINER_BIND=/project/6011879/<user-ID>/:/data
+export APPTAINER_WORKDIR=${SLURM_TMPDIR}
+
+module load qiime2/2023.5
+
+# run the cutadapt command to trim primers from all bird sample reads
+
+qiime cutadapt trim-paired \
+ --i-demultiplexed-sequences /data/amplicon-analysis/PEreads_birds.qza \
+ --p-front-f GTGYCAGCMGCCGCGGTAA \
+ --p-front-r CCGYCAATTYMTTTRAGTTT \
+ --p-discard-untrimmed \
+ --p-no-indels \
+ --o-trimmed-sequences /data/amplicon-analysis/trimmed-reads_birds.qza
+
+# generate a summary report to see how many reads were lost
+qiime demux summarize \
+ --i-data /data/amplicon-analysis/trimmed-reads_birds.qza \
+ --o-visualization /data/amplicon-analysis/summaries/cutadapt_birds.qzv
+
+```
+
+Here is a review of some of the parameters (`--p`) I used:
+
+* `--p-front-f GTGYCAGCMGCCGCGGTAA`: a parameter flag that specifies the forward primer sequence used for trimming, `GTGYCAGCMGCCGCGGTAA`. These should be specified on the information provided by the type of primer used.
+
+* `--p-front-r CCGYCAATTYMTTTRAGTTT`: specifies the reverse primer sequence used for trimming, `CCGYCAATTYMTTTRAGTTT`.
+
+* `--p-discard-untrimmed`: indicates that any sequences that are not trimmed (i.e., no matching primer sequences found) should be discarded.
+
+* `--p-no-indels`: indicates that the trimming should not allow for insertions or deletions (indels) during the trimming process, meaning the primers must match exactly without any additional or missing bases.
+
+
+Now run the same commands for the sediment samples and call the nano script `trimming_sediments.sh`:
+```{r, eval=FALSE}
+#!/bin/bash
+#SBATCH --time=
+#SBATCH --account=<group-ID>
+#SBATCH --mem=
+
+export APPTAINER_BIND=/project/6011879/<user-ID>/:/data
+export APPTAINER_WORKDIR=${SLURM_TMPDIR}
+
+module load qiime2/2023.5
+
+qiime cutadapt trim-paired \
+ --i-demultiplexed-sequences /data/amplicon-analysis/PEreads_sediments.qza \
+ --p-front-f GTGYCAGCMGCCGCGGTAA \
+ --p-front-r CCGYCAATTYMTTTRAGTTT \
+ --p-discard-untrimmed \
+ --p-no-indels \
+ --o-trimmed-sequences /data/amplicon-analysis/trimmed-reads_sediments.qza
+
+qiime demux summarize \
+ --i-data /data/amplicon-analysis/trimmed-reads_sediments.qza \
+ --o-visualization /data/amplicon-analysis/summaries/cutadapt_sediments.qzv
+```
+
+Next, I saved and ran the scripts using `sbatch` and checked the slurm file when the job was complete
+```{r, eval=FALSE}
+sbatch trimming_birds.sh
+sbatch trimming_sediments.sh
+
+#check the 2 slurm files that were produced after a few minutes
+view slurm-<"JOB-ID">
+```
+
+
+**TIP:** To view explanations for each option of the `cutadapt` command or view other options run the help command for cutadapt (or for other tools in the future):
+```{r, eval=FALSE}
+qiime cutadapt --help
+```
+
+### Summarizing data
+
+At this point, exit the cluster and re-enter using the SFTP to move the .QZV files that were just created from the Graham cluster to our local computer. Drag and drop the file onto https://view.qiime2.org/ to view an interactive quality plot and a table of sequence details.
+
+**REVIEW WHAT THE QIIME PAGE LOOKS LIKE**
+It's good to make sure there was not an unordinary amount of reads lost as this stage and at the next stages when joining the reads, constructing ASVs and filtering ASVs.
+
+
+###   Joining read pairs
+
+Since we are working with paired-end data, it's important to join the read pairs before assigning taxonomy. We can use a merging command offered by the q2-vsearch plug-in **[9]**, which also provides methods for clustering and dereplicating features and sequences. The `merge-pairs` command can be run to join the R1 and R2 read pairs for each sample. Here, I just incorporated the `qiime demux summarize` command into the job script.
+
+Open nano and use this `joining.sh` script to join pairs:
+
+```{r, eval=FALSE}
+#!/bin/bash
+#SBATCH --time=
+#SBATCH --account=<group-ID>
+#SBATCH --mem=
+
+export APPTAINER_BIND=/project/6011879/<user-ID>/:/data
+export APPTAINER_WORKDIR=${SLURM_TMPDIR}
+
+module load qiime2/2023.5
+
+# commands for joining reads of all bird samples
+qiime vsearch merge-pairs  \
+ --i-demultiplexed-seqs /data/amplicon-analysis/trimmed-reads_birds.qza \
+ --o-joined-sequences /data/amplicon-analysis/joined-reads_birds.qza
+
+#use the demux command to generate a summary report for the joining
+qiime demux summarize \
+ --i-data /data/amplicon-analysis/joined-reads_birds.qza \
+ --o-visualization /data/amplicon-analysis/summaries/joining-summary_birds.qzv
+
+#commands for joining reads of all sediment samples
+qiime vsearch merge-pairs \
+ --i-demultiplexed-seqs /data/amplicon-analysis/trimmed-reads_sediments.qza \
+ --o-joined-sequences /data/amplicon-analysis/joined-reads_sediments.qza
+
+qiime demux summarize \
+ --i-data /data/amplicon-analysis/joined-reads_sediments.qza \
+ --o-visualization /data/amplicon-analysis/summaries/joining-summary_sediments.qzv
+```
+
+```{r, eval=FALSE}
+sbatch joining.sh
+```
+
+### Quality filtering
+
+Finally, it is always good practise to filter your data based on quality, 
+
+I wrote a job script to run a quality filter on the joined reads using the `qiime quality-filter` command **[10]** and created a summary report of the check using the `qiime demux sumamrize ` command 
+
+```{r, eval=FALSE}
+nano qualityfilter.sh
+```
+
+Open nano and use the following job script titled `quality-filter.sh`, edit accordingly, and run using `sbatch`:
+```{r, eval=FALSE}
+#!/bin/bash
+#SBATCH --time=
+#SBATCH --account=<group-ID>
+#SBATCH --mem=
+
+export APPTAINER_BIND=/project/6011879/<user-ID>/:/data
+export APPTAINER_WORKDIR=${SLURM_TMPDIR}
+
+module load qiime2/2023.5
+
+#for bird samples
+qiime quality-filter q-score \
+ --i-demux /data/amplicon-analysis/joined-reads_birds.qza \
+ --o-filter-stats /data/amplicon-analysis/filt_stats_birds.qza \
+ --o-merged-sequences /data/amplicon-analysis/filteredreads_birds.qza
+
+qiime demux summarize \
+ --i-data /data/amplicon-analysis/filteredreads_birds.qza \
+ --o-visualization /data/amplicon-analysis/summaries/filteredreads_birds.qzv
+
+#for sediment samples
+qiime quality-filter q-score \
+ --i-demux /data/amplicon-analysis/joined-reads_sediments.qza \
+ --o-filter-stats /data/amplicon-analysis/filt_stats_sediments.qza \
+ --o-merged-sequences /data/amplicon-analysis/filteredreads_sediments.qza
+
+qiime demux summarize \
+ --i-data /data/amplicon-analysis/filteredreads_sediments.qza \
+ --o-visualization /data/amplicon-analysis/summaries/filteredreads_sediments.qzv
+
+```
+
+Now that we have trimmed the primers, joined the read files and quality filtered the data, we can begin transforming the data by constructing amplicon sequence variants (ASV's) and assigning taxonomy to our samples using a reference database.
+
+
+## **Data transformation**
+
+In the context of amplicon sequence analysis, data transformation refers to the manipulation and organization of raw sequencing data into a format that can be used for downstream analysis. This includes steps such as quality filtering, denoising, and assigning unique sequence variants to create an Amplicon Sequence Variant (ASV) table. Transforming the raw sequencing data allows us to explore and interpret microbial community composition and dynamics.
+
+### Constructing ASV's
+
+ASV (Amplicon Sequence Variant) analysis is a newer approach used in microbial community studies **[11]**, particularly in the analysis of 16S rRNA gene sequencing data - it is different from the more well-known Operational Taxonomic Unit (OTU) approach. ASV analysis sees each unique sequence variant as its own special biological entity. Even a tiny difference of just one nucleotide between two sequences means they become separate ASVs. It's different from the traditional way of grouping sequences into OTUs (Operational Taxonomic Units) based on a similarity threshold of around 97%. With ASVs, we get a sharper resolution, picking up even the tiniest genetic variations in the microbial community. By keeping the uniqueness intact, ASVs can give us more precise taxonomic assignments. 
+
+While both methods, ASV and OTU, are accepted and widely used in microbial ecology, there has been a growing preference for ASVs due to their ability to distinguish closely related taxa and to reduce the impact of sequencing errors and noise in the data. That means we can get more sensitive and biologically meaningful results. 
+
+To begin, the reads from each joined-pair file  are corrected and then amplicon sequence variants can be constructed for each file using the qiime deblur plug-in **[12]** for 16S data. Here, I used a trimming length (`--p-trim-length`) equal to **240** based on the **quality score** of the reads that were obtained in the previous section.
+
+Use this job script to run the ASV construction on both sediment and bird samples, and run the `qiime feature-table summary` command to create a .QZV file that lists the number of ASV's in each feature table:
+  
+```{r, eval=FALSE}
+#!/bin/bash
+#SBATCH --time=
+#SBATCH --account=<group-ID>
+#SBATCH --mem=
+
+export APPTAINER_BIND=/project/6011879/<user-ID>/:/data
+export APPTAINER_WORKDIR=${SLURM_TMPDIR}
+
+module load qiime2/2023.5
+
+#for sediment core sub-samples
+qiime deblur denoise-16S \
+  --i-demultiplexed-seqs /data/amplicon-analysis/filteredreads_sediments.qza \
+  --p-trim-length 240 \
+  --p-sample-stats \
+  --o-representative-sequences /data/amplicon-analysis/rep-seqs_sediments.qza \
+  --o-table /data/amplicon-analysis/feature-table_sediments.qza \
+  --o-stats /data/amplicon-analysis/deblurstats_sediments.qza
+
+ qiime feature-table summarize \
+ --i-table /data/amplicon-analysis/feature-table_sediments.qza \
+ --o-visualization /data/amplicon-analysis/summaries/feature-table_sediments.qzv
+
+ 
+#for seabird fecal swab samples
+qiime deblur denoise-16S \
+  --i-demultiplexed-seqs /data/amplicon-analysis/filteredreads_birds.qza \
+  --p-trim-length 240 \
+  --p-sample-stats \
+  --o-representative-sequences /data/amplicon-analysis/rep-seqs_birds.qza \
+  --o-table /data/amplicon-analysis/feature-table_birds.qza \
+  --o-stats /data/amplicon-analysis/deblurstats_birds.qza
+
+ qiime feature-table summarize \
+ --i-table /data/amplicon-analysis/feature-table_birds.qza \
+ --o-visualization /data/amplicon-analysis/summaries/feature-table_birds.qzv
+```
+
+At this point, there should be 10 files in total produced by this script (5 for each sample type), including:
+
+|File|Description|
+|----|-----------|
+|deblur.log| a job file that lists processing details, as well as the total sequences, passing sequences, and failing sequences
+|deblurstats.qza| statistical information on the ASV construction (can be view using the following command:  `qiime metadata tabulate --m-input-file deblurstats.qza --o-visualization deblurstats.qzv` )|
+|rep-seqs.qza| this file contains all the sequences associated to each ASV (multiple sequences can be associated to one ASV)|
+|featuretabledeblur.qza| this file contains a table of all the ASV's associated to each sample
+|deblurtablesummary.qzv| summary file created from the `qiime feature-table summary` command|
+
+## **Data reduction**
+Data reduction is the last data preprocessing step covered in this tutorial. Here, data is reduced based on the confidence of taxonomic classifications, level of classification and uniqueness of the assignments.
+
+### Filtering unique reads 
+
+First, filter out ASVs based on total frequency of samples, which removes all unique reads in the library that are not wanted since they are likely due to Mi-Seq bleed-through between runs (~0.1%). 
+
+We used the following `filter-features` command, as a part of the `feature-table` plug-in to begin filtering our table. For this command, a cut-off of 10 was used for the minimum frequency (`--p-min-frequency`) option. I decided to set the minimum number of samples a feature must appear in to just 1 sample (--p-min-samples). This way, I made sure to include all samples in our set, even the ones with unique or rare features. After filtering out rare ASVs, a summary command can be run to view how many reads were lost in each file.
+
+
+```{r, eval=FALSE}
+#!/bin/bash
+#SBATCH --time=
+#SBATCH --account=<group-ID>
+#SBATCH --mem=
+
+export APPTAINER_BIND=/project/6011879/<user-ID>/:/data
+export APPTAINER_WORKDIR=${SLURM_TMPDIR}
+
+module load qiime2/2023.5
+
+#for sediment samples
+qiime feature-table filter-features \
+ --i-table /data/amplicon-analysis/feature-table_sediments.qza \
+ --p-min-frequency 10 \
+ --p-min-samples 1 \
+ --o-filtered-table /data/amplicon-analysis/filtered_feature-table_sediments.qza
+
+qiime feature-table summarize \
+ --i-table /data/amplicon-analysis/filtered_feature-table_sediments.qza \
+ --o-visualization /data/amplicon-analysis/summaries/filtered_feature-table_sediments.qzv
+
+#for seabird samples
+qiime feature-table filter-features \
+ --i-table /data/amplicon-analysis/feature-table_birds.qza \
+ --p-min-frequency 10 \
+ --p-min-samples 1 \
+ --o-filtered-table /data/amplicon-analysis/filtered_feature-table_birds.qza
+
+qiime feature-table summarize \
+ --i-table /data/amplicon-analysis/filtered_feature-table_birds.qza \
+ --o-visualization /data/amplicon-analysis/summaries/filtered_feature-table_birds.qzv
+```
+
+To see a review on some of the parameters you can use for the `filter-features` command, use" `qiime feature-table filter-features --help`. 
+
+Transfer the summary file to your local computer using the SFTP reviewed in Ch-03 (Importing Data), in order to view the results on [view.qiime2.org](view.qiime2.org).
+
+## **Manipulating tables**
+
+Knowing how to manipulate QIIME2 feature tables for downstream analysis (concatenating, merging, grouping, collapsing, etc.) is crucial because it allows you to customize and structure microbiome data effectively and extract meaningful insights. This way you can perform accurate statistical analyses tailored to your research questions!
+
+### Merging feature tables 
+
+First let's create a feature table that merges feature counts from `filtered_feature-table_birds.qza` and `filtered_feature-table_sediments.qza`. In the QIIME2 command-line tool, the `qiime feature-table merge` command allows you to merge multiple feature tables. One thing you'll also want to do upon merging your feature tables is merge your representative sequence files using the `merge-seqs` command. This can be done the exact same way as above. Check to make sure the table was merged properly using the summary command by transferring the file to your local computer to view on [view.qiime2.org](view.qiime2.org).
+
+```{r, eval=FALSE}
+#!/bin/bash
+#SBATCH --time=
+#SBATCH --account=<group-ID>
+#SBATCH --mem=
+
+export APPTAINER_BIND=/project/6011879/<user-ID>/:/data
+export APPTAINER_WORKDIR=${SLURM_TMPDIR}
+
+module load qiime2/2023.5
+
+qiime feature-table merge \
+ --i-tables /data/amplicon-analysis/filtered_feature-table_birds.qza /data/amplicon-analysis/filtered_feature-table_sediments.qza \
+ --p-overlap-method sum \
+ --o-merged-table /data/amplicon-analysis/merged-table.qza
+
+qiime feature-table merge-seqs \
+ --i-data /data/amplicon-analysis/rep-seqs_birds.qza /data/amplicon-analysis/rep-seqs_sediments.qza \
+ --o-merged-data /data/amplicon-analysis/merged_rep-seqs.qza
+
+qiime feature-table summarize \
+ --i-table /data/amplicon-analysis/merged-table.qza \
+ --o-visualization /data/amplicon-analysis/summaries/merged-table.qzv
+```
+
+Make sure that when you are listing your input tables (`--i-tables`) that there is a space between the two tables you want to merge (this command will not work if you put two `--i-tables` options). In the above command, the `--p-overlap-method` parameter specifies how the tool should handle overlapping feature IDs when merging these tables. The reason you have to specify an overlap method is because QIIME2 needs to know how to handle cases where the same feature (i.e., the same ID) appears in multiple input feature tables. This situation can arise when you are merging tables that have the same sample IDs, and it's important to determine how to handle these overlaps to ensure the accuracy of downstream analyses. The `--p-overlap-method` parameter offers several options for handling overlapping IDs:
+
+* `average` calculates the average value for each overlapping feature ID across all the input tables.
+
+* `error_on_overlapping_feature` raises an error if there are overlapping feature IDs in the input tables, indicating that you do not want to allow such overlaps.
+
+* `error_on_overlapping_sample` raises an error if there are overlapping sample IDs in the input tables, indicating that you do not want to allow such overlaps.
+
+* `sum` will add up the values for each overlapping feature ID across all the input tables.
+
+In this case, there are completely different samples in each feature table, so there is no overlap in the sample IDs between the two tables, but there may be overlap in the feature IDs. Using the `--p-overlap-method sum` option to merge the tables won't affect the samples in this case.
+
+___
+
+&nbsp;
+<hr />
+<p style="text-align: center;">Github: [johannabosch](https://github.com/johannabosch) </a></p>
+<p style="text-align: center;"><span style="color: #808080;"><em>yohannabosch@gmail.com</em></span></p>
+
+<!-- Add icon library -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<!-- Add font awesome icons -->
+<p style="text-align: center;">
+    <a href="https://www.instagram.com/yohannabosch/" class="fa fa-instagram"></a>
+    <a href="https://www.linkedin.com/in/yan-holtz-2477534a/" class="fa fa-linkedin"></a>
+    <a href="https://github.com/johannabosch/" class="fa fa-github"></a>
+</p>
+
+&nbsp;

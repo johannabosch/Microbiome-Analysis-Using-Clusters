@@ -1,0 +1,206 @@
+# **IMPORTING DATA**
+
+To begin importing your data onto the cluster, first make sure the files are downloaded on your computer.
+Go to Ch-10 (Resources) to download the raw data used in this analysis if you haven't already, or follow along using  your own data! You will also want to download the accompanying metadata files.
+
+## **Getting organized**
+
+Before importing data onto the cluster, it's nice to make sure you have a dedicated directory for all your data files. If you stay organized during your analysis you can pretty much run all your job scripts in the same directory.
+
+Make a directory to work in for this analysis
+```{r, eval=FALSE}
+mkdir amplicon-analysis
+
+# navigate to the new directory
+cd amplicon-analysis
+
+# make 2 more folders called **/rawdata** and **/metadata**
+mkdir rawdata
+mkdir metadata
+
+#make a file for the bird fecal samples in /rawdata
+mkdir rawdata/birds
+
+#make a file for the sediment samples in /rawdata
+mkdir rawdata/sediments
+```
+
+Check to make sure the new folders are there using the`ls` command
+
+## **Moving data to the cluster** {.tabset}
+
+Transferring data onto the cluster from your local computer desktop can be done using the safe file transfer protocol (SFTP). To do this, first exit the cluster and re-enter the using the following safe file transfer protocol (SFTP) command:
+
+```{r, eval=FALSE}
+#first exit the cluster if you are still signed in
+exit
+
+#now sign in using the SFTP command
+sftp 'username'@graham.computecanada.ca
+
+# Now, move to the amplicon-analysis directory using the 'cd' command
+cd projects/'PI-profile'/'username'/amplicon-analysis
+
+```
+
+Next, navigate to the folder on your local computer where the raw data file `raw-data.zip` is stored, usually in a .zip or .gz format. **To run a command in our local computer, always start the command with the letter `l`, like this:**
+
+```{r, eval=FALSE}
+#print contents of the rawdata folder on your local computer
+lcd <local path to folder containg .FASTQ files>
+```
+
+**To move files from your local computer to the cluster:** `put <filename>`
+**To move files from the cluster to your local computer:** `get <filename>`
+
+> For example. in order to transfer the files from a local computer into a user directory on the cluster, use the command `put` with a wildcard expression to move all the `.FASTQ.GZ` files in the local directory. To later transfer the QIIME artifacts created in this analysis from the remote computer to our local computer, the `get` command is used.
+
+The `/amplicon-analysis` directory should contain a `/rawdata` folder at this point to move the raw data files into.
+
+```{r, eval=FALSE}
+#if you want to transfer the zipped folders into the /rawdata directory on the cluster:
+put rawdata-birds.zip rawdata
+put rawdata-sediments.zip rawdata
+
+#check to make sure all the files are properly transferred to the cluster
+ls rawdata/rawdata-birds
+ls rawdata/rawdata-sediments
+
+```
+
+>**NOTE:**
+* Use an astericks (*) as a "wildcard" in any regular expression to include multiple files in one command, or avoid writing the full filename over and over again while running commands (see the `put` command below)
+* You can check that you're in the right directory using the `pwd` or `lpwd` command
+
+After downloading all of the metadata files from the [Github repo](https://github.com/johannabosch/QIIME2_for_Graham), transfer them over to the cluster like this:
+
+```{r, eval=FALSE}
+
+#transfer the metadata files
+lcd <path to metadata files on local computer>
+  
+cd <path to amplicon-analysis directory>
+  
+put metadata* metadata/
+
+## OUTPUT:
+  
+Uploading metadata-birds.csv to /project/6000879/jlb686/amplicon-data/amplicon-analysis/metadata/metadata-birds.csv
+metadata-birds.csv                                    100%  585     8.9KB/s   00:00
+Uploading metadata-grouped.csv to /project/6000879/jlb686/amplicon-data/amplicon-analysis/metadata/metadata-grouped.csv
+metadata-grouped.csv                                  100%  254     5.0KB/s   00:00
+Uploading metadata-sediments.csv to /project/6000879/jlb686/amplicon-data/amplicon-analysis/metadata/metadata-sediments.csv
+metadata-sediments.csv                                100%  537     4.6KB/s   00:00
+Uploading metadata.csv to /project/6000879/jlb686/amplicon-data/amplicon-analysis/metadata/metadata.csv
+metadata.csv                                          100%  992    21.2KB/s   00:00
+
+# check to make sure files are there 
+ls metadata
+
+## OUTPUT:
+metadata-birds.csv      metadata-grouped.csv    metadata-sediments.csv  metadata.csv
+```
+
+To proceed to the next steps, exit SFTP, log back into the cluster using `ssh`, and navigate back to your working directory
+
+```{r, eval=FALSE}
+exit
+
+ssh jlb686@graham.computecanada.ca
+
+cd projects/'PI-profile'/'username'/amplicon-analysis
+
+```
+
+
+## **Organizing .FASTQ files**
+
+### Unzip rawdata files
+
+If you need to unzip your compressed rawdata folder on the cluster, use the following command:
+```{r, eval=FALSE}
+unzip rawdata/<filename>.zip #replace <filename> with your file
+```
+
+Unzip the rawdata files for the bird and sediment samples.
+
+If you want to see a portion of what is in one of the `.fastq.gz` rawdata files, you can use the following command:
+```{r, eval=FALSE}
+zcat rawdata/birds/ATPU01_S125_L001_R1_001.fastq.gz | head
+```
+
+
+Check to make sure the files are in the correct folders using the `ls` command. Here I ran the command so that if you are working with my files you can see what the output should look like:
+```{r, eval=FALSE}
+
+
+ls rawdata/birds
+
+## OUTPUT:
+
+ATPU01_S125_L001_R1_001.fastq.gz  COMU-42_S185_L001_R1_001.fastq.gz
+ATPU01_S125_L001_R2_001.fastq.gz  COMU-42_S185_L001_R2_001.fastq.gz
+ATPU02_S137_L001_R1_001.fastq.gz  COMU43_S102_L001_R1_001.fastq.gz
+ATPU02_S137_L001_R2_001.fastq.gz  COMU43_S102_L001_R2_001.fastq.gz
+ATPU03_S149_L001_R1_001.fastq.gz  COMU44_S114_L001_R1_001.fastq.gz
+ATPU03_S149_L001_R2_001.fastq.gz  COMU44_S114_L001_R2_001.fastq.gz
+ATPU56_S161_L001_R1_001.fastq.gz  COMU46_S126_L001_R1_001.fastq.gz
+ATPU56_S161_L001_R2_001.fastq.gz  COMU46_S126_L001_R2_001.fastq.gz
+ATPU58_S173_L001_R1_001.fastq.gz  NOGA27_S100_L001_R1_001.fastq.gz
+ATPU58_S173_L001_R2_001.fastq.gz  NOGA27_S100_L001_R2_001.fastq.gz
+BLKI01_S160_L001_R1_001.fastq.gz  NOGA30_S112_L001_R1_001.fastq.gz
+BLKI01_S160_L001_R2_001.fastq.gz  NOGA30_S112_L001_R2_001.fastq.gz
+BLKI02_S172_L001_R1_001.fastq.gz  NOGA31_S124_L001_R1_001.fastq.gz
+BLKI02_S172_L001_R2_001.fastq.gz  NOGA31_S124_L001_R2_001.fastq.gz
+BLKI03_S184_L001_R1_001.fastq.gz  NOGA32_S136_L001_R1_001.fastq.gz
+BLKI03_S184_L001_R2_001.fastq.gz  NOGA32_S136_L001_R2_001.fastq.gz
+BLKI04_S101_L001_R1_001.fastq.gz  NOGA33_S148_L001_R1_001.fastq.gz
+BLKI04_S101_L001_R2_001.fastq.gz  
+BLKI05_S113_L001_R1_001.fastq.gz
+BLKI05_S113_L001_R2_001.fastq.gz
+
+___
+
+ls rawdata/sediments
+
+## OUTPUT:
+FOGO12_S140_L001_R1_001.fastq.gz  REF12_S175_L001_R1_001.fastq.gz
+FOGO12_S140_L001_R2_001.fastq.gz  REF12_S175_L001_R2_001.fastq.gz
+FOGO1_S187_L001_R1_001.fastq.gz   REF1_S127_L001_R1_001.fastq.gz
+FOGO1_S187_L001_R2_001.fastq.gz   REF1_S127_L001_R2_001.fastq.gz
+FOGO2_S104_L001_R1_001.fastq.gz   REF2_S139_L001_R1_001.fastq.gz
+FOGO2_S104_L001_R2_001.fastq.gz   REF2_S139_L001_R2_001.fastq.gz
+FOGO4_S116_L001_R1_001.fastq.gz   REF4_S151_L001_R1_001.fastq.gz
+FOGO4_S116_L001_R2_001.fastq.gz   REF4_S151_L001_R2_001.fastq.gz
+FOGO6_S128_L001_R1_001.fastq.gz   REF8_S163_L001_R1_001.fastq.gz
+FOGO6_S128_L001_R2_001.fastq.gz   REF8_S163_L001_R2_001.fastq.gz
+IMP12_S115_L001_R1_001.fastq.gz
+IMP12_S115_L001_R2_001.fastq.gz
+IMP1_S162_L001_R1_001.fastq.gz
+IMP1_S162_L001_R2_001.fastq.gz
+IMP2_S174_L001_R1_001.fastq.gz
+IMP2_S174_L001_R2_001.fastq.gz
+IMP4_S186_L001_R1_001.fastq.gz
+IMP4_S186_L001_R2_001.fastq.gz
+IMP-8_S103_L001_R1_001.fastq.gz
+IMP-8_S103_L001_R2_001.fastq.gz
+```
+___
+
+
+&nbsp;
+<hr />
+<p style="text-align: center;">Github: [johannabosch](https://github.com/johannabosch) </a></p>
+<p style="text-align: center;"><span style="color: #808080;"><em>yohannabosch@gmail.com</em></span></p>
+
+<!-- Add icon library -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<!-- Add font awesome icons -->
+<p style="text-align: center;">
+    <a href="https://www.instagram.com/yohannabosch/" class="fa fa-instagram"></a>
+    <a href="https://www.linkedin.com/in/yan-holtz-2477534a/" class="fa fa-linkedin"></a>
+    <a href="https://github.com/johannabosch/" class="fa fa-github"></a>
+</p>
+
+&nbsp;

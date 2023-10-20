@@ -1,0 +1,123 @@
+# **QIIME2 ON THE CLUSTER**
+
+Qiime2 is now an available module on the Graham cluster. Apptainer **[5]** is a container system that's required to access QIIME2 because all qiime commands are executed within a containerized environment. Apptainer facilitates the management and execution of containers - a standard unit of software that packages up code and all its dependencies so an application like QIIME2 can run seamlessly. To employ the QIIME2 platform using Apptainer, users need to define specific folder bindings within the container by setting the `APPTAINER_BIND` environment variable. This ensures that the container can access and interact with the necessary data and directories. Additionally, Apptainer has replaced Singularity for this purpose, providing improved features and compatibility, all while preserving backward compatibility.
+
+
+## **Use QIIME2 via Apptainer**
+
+### Finding physical paths
+
+Apptainer allows you to map directories on your host system to directories within an Apptainer container using bind mounts. This enables seamless reading and writing of data between the host system and the container. On the cluster, it can be configured through user-defined bind paths that you specify in your code, providing flexibility in managing file access between the host and the container. To connect to and use Apptainer mounts, you have to define the path to your physical directory without using symbolic links (Apptainer is not compatible with symbolic links).
+
+**What is a symbolic link?** - When you navigate to your home directory on the cluster, usually you'll use a command that looks something like this:  `cd projects/def-<group-name>/<user-ID>/`. Let's say your group name is `birch`, then the symbolic link to your project directory is `def-birch`. The symbolic links we use on the Graham, Béluga, Cedar, and Narval clusters serve as shortcuts or pointers to group-specific directories, making it easier for users to navigate and work within their respective project spaces.
+
+**What is a physical path?** - The physical path represents the real, tangible location of data on a storage medium.Symbolic paths are more about providing convenience and abstraction, while physical paths represent the concrete location of data on storage media.
+
+Given this info, let's start by finding the physical path of our user directory with the `ls -l` or `pwd -P` command:
+```{r, eval=FALSE}
+#navigate to your user directory
+cd projects/def-<group-name>/<user-ID>/amplicon-analysis
+
+#use the `ls` command
+ls -l /home/jlb686/projects/
+  
+## OUTPUT:
+
+total 0
+lrwxrwxrwx 1 <user-ID> <user-ID> 16 Nov 10  2021 def-<group-name> -> /project/6011879
+
+
+# Alternatively, use `pwd -P`:
+pwd -P
+
+## OUTPUT:
+/project/6011879/<user-ID>/amplicon-analysis
+```
+
+The output of the `ls -l` or `pwd -P` command provides the physical path for `def-<group-name>`, which in this example is `project/6011879`.
+
+### Using Apptainer mounts
+
+Now that the physical path has been found, here is an example of a bash script using Apptainer to run a QIIME2 command. These scripts can easily be written using Nano. I discussed how to use Nano in Ch-02 (Computing Basics). The Apptainer mount is set to the `/project/6011879/<user-ID>/amplicon-analysis` directory.
+
+These QIIME2 scripts should always include the shebang line (`#!/bin/bash`), the amount of time memory to use, and the two `export` commands you see below:
+
+```{r, eval=FALSE}
+#!/bin/bash
+#SBATCH --time=
+#SBATCH --mem=
+
+export APPTAINER_BIND=/project/6011879/<user-ID>/:/data
+export APPTAINER_WORKDIR=${SLURM_TMPDIR}
+
+module load qiime2/2023.5
+
+'qiime command here'
+```
+
+>The `APPTAINER_BIND` line connects a folder on your computer, `/project/_____`, with a folder inside the Apptainer container, `/data/`. It's like creating a bridge between your files and the container, so you can easily access your data from within the container. Make sure to replace this example physical path (`project/6011879`) with your own physical path number.
+
+> The `APPTAINER_WORKDIR=${SLURM_TMPDIR}` line tells the container where to do its work. Even though the container starts in a temporary directory (`SLURM_TMPDIR`), the earlier bind means you can still reach your original data from within the container through the `/data/` folder. This way, you can keep your files organized and work on them effectively.
+
+> So, you're essentially using Apptainer to connect your data with the container and instructing the container to do its work in a temporary directory while still having easy access to your data. It's like having a workspace inside a bigger office where your files are stored separately, but you can quickly grab what you need when you're working.
+> Once the script is written in nano, press **ctrl + X**, name the script (usually ending in `.sh`), save and exit. Here are some tips to run the script and perform other commands related to job scripts:
+
+```{r, eval=FALSE}
+# run the script
+sbatch 'script'.sh
+
+# check the job status
+sq -u 'script'.sh
+
+# check the slurm file once the job is complete
+view slurm-'jobID'
+#press the shift key while scrolling to view the whole file
+
+# check how much memory the build used for future reference
+seff 'jobID'
+
+#move the script to the /scripts directory
+mv 'script'.sh /scripts
+
+#remove your slurm file
+rm slurm-'jobID'
+```
+
+### Getting help
+
+You can easily view all the options available for each QIIME2 command
+```{r, eval=FALSE}
+#load qiime module first
+module load qiime2
+
+#use the --help option to view all the available options for a qiime command
+qiime --help
+
+```
+
+__
+
+You can read more about using QIIME2 on the Alliance (QIIME Wiki Page)[https://docs.alliancecan.ca/wiki/QIIME].
+
+To learn more about Apptainer visit the Alliance (Apptainer Wiki page)[https://docs.alliancecan.ca/wiki/Apptainer].
+
+
+___
+
+
+&nbsp;
+<hr />
+<p style="text-align: center;">Github: [johannabosch](https://github.com/johannabosch) </a></p>
+<p style="text-align: center;"><span style="color: #808080;"><em>yohannabosch@gmail.com</em></span></p>
+
+<!-- Add icon library -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<!-- Add font awesome icons -->
+<p style="text-align: center;">
+    <a href="https://www.instagram.com/yohannabosch/" class="fa fa-instagram"></a>
+    <a href="https://www.linkedin.com/in/yan-holtz-2477534a/" class="fa fa-linkedin"></a>
+    <a href="https://github.com/johannabosch/" class="fa fa-github"></a>
+</p>
+
+&nbsp;

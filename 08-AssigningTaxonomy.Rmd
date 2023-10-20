@@ -1,0 +1,211 @@
+# **ASSIGNING TAXONOMY**
+Assigning taxonomy to ASVs (Amplicon Sequence Variants) involves classifying unique genetic sequences into taxonomic categories (e.g., genus or species) to identify the organisms they originate from. This helps researchers understand the microbial composition in a sample based on high-resolution genetic data. To assign taxonomy to ASVs using a reference database, you can use a sequence classification tool like QIIME2's feature-classifier. In this case, you basically provide the ASV sequences as input, and the tool matches them to known sequences in the reference database to assign taxonomic labels.
+
+## **Classifying ASV's**
+
+There are three options for classifying ASVs taxonomically in QIIME:
+1) `feature-classifier classify-sklearn` 
+2) `feature-classifier consensus-vsearch`
+3) `feature-classifier classify-consensus-vsearch`
+
+Here, I used the `classify-sklearn` approach, which is known for its speed and efficiency, and can be advantageous when working with large data sets. It's also a well-documented and widely used method, making it a reliable option with ample community support. However, it's important to note that the best choice may depend on your specific data set and research goals, so it's always a good idea to consider the strengths and limitations of each classification method before making a decision.
+
+### Using scikit-learn
+
+Scikit-learn (sklearn) is a powerful machine learning library, including a naive Bayes classifier, used to categorize marker-gene sequences in QIIME based on a pre-trained model (silva-138-99-nb-classifier.qza), revealing the composition of microbial communities in the data set.
+
+To begin, a taxonomic classifier was obtained from the full length SILVA reference sequences on the Qiime2 website: (https://docs.qiime2.org/2022.2/data-resources/) 
+
+Download the classifier into the main directory with the `wget` command (this can take a long time and can also be done in a job script)
+
+```{r, eval=FALSE}
+wget https://data.qiime2.org/2023.7/common/silva-138-99-nb-classifier.qza
+```
+
+Next, run the full length 16S taxonomic classification on the read files with the following qiime feature-classifier:
+
+```{r, eval=FALSE}
+#!/bin/bash
+#SBATCH --time=
+#SBATCH --account=<group-ID>
+#SBATCH --mem=
+
+export APPTAINER_BIND=/project/6011879/<user-ID>/:/data
+export APPTAINER_WORKDIR=${SLURM_TMPDIR}
+
+module load qiime2/2023.5
+
+#for sediment core samples
+qiime feature-classifier classify-sklearn \
+ --i-reads /data/amplicon-analysis/rep-seqs_sediments.qza \
+ --i-classifier /data/amplicon-analysis/silva-138-99-nb-classifier.qza \
+ --o-classification /data/amplicon-analysis/classification_sediments.qza
+
+#for seabird fecal swab samples:
+qiime feature-classifier classify-sklearn \
+ --i-reads /data/amplicon-analysis/rep-seqs_birds.qza \
+ --i-classifier /data/amplicon-analysis/silva-138-99-nb-classifier.qza \
+ --o-classification /data/amplicon-analysis/classification_birds.qza
+
+#for the merged file:
+qiime feature-classifier classify-sklearn \
+ --i-reads /data/amplicon-analysis/merged_rep-seqs.qza \
+ --i-classifier /data/amplicon-analysis/silva-138-99-nb-classifier.qza \
+ --o-classification /data/amplicon-analysis/classification.qza
+
+```
+
+## **Verifying with BLASTn**
+
+As a safety measure, use the feature-table plug-in **[17]** to run a `tabulate-seqs` **[18]** command that will generate a table with all the Feature ID's associated to each representative sequence. Using this plug-in, it's also possible to use BLASTn to evaluate the subset of taxonomic assignments in the taxa files. By comparing the taxonomic assignments from the preceding output to the leading BLASTn hits, you can verify the classifier's accuracy. Let's do this for the `rep-seqs` file for the sediment and seabird fecal samples, as well as the `merged_rep-seqs` file: 
+
+```{r, eval=FALSE}
+#!/bin/bash
+#SBATCH --time=
+#SBATCH --account=<group-ID>
+#SBATCH --mem=
+
+export APPTAINER_BIND=/project/6011879/<user-ID>/:/data
+export APPTAINER_WORKDIR=${SLURM_TMPDIR}
+
+module load qiime2/2023.5
+
+qiime feature-table tabulate-seqs \
+--i-data /data/amplicon-analysis/rep-seqs_sediments.qza  \
+--o-visualization /data/amplicon-analysis/BLAST_sediments_rep-seqs.qzv
+
+qiime feature-table tabulate-seqs \
+--i-data /data/amplicon-analysis/rep-seqs_birds.qza  \
+--o-visualization /data/amplicon-analysis/BLAST_bird_rep-seqs.qzv
+
+qiime feature-table tabulate-seqs \
+--i-data /data/amplicon-analysis/merged_rep-seqs.qza  \
+--o-visualization /data/amplicon-analysis/BLAST_merged_rep-seqs.qzv
+
+```
+
+Open the Blast files in QIIME2 and there will be three tables that load:
+
+1) The sequence length statistics
+2) The seven-number summary of sequence lengths
+3) The sequence table
+
+BLAST a sequence against the NCBI nt database by clicking on the linked sequences within the sequence table, which will will open NCBI's blastn suite. Click on the `View Report` button and wait for the suite to load the nt data for this sequence (this can take a while). You can do this with around five sequences at random to determine whether or not the results from the taxonomic classification through QIIME2 align with the NCBI database. 
+
+
+### Filtering contaminants
+
+After assigning taxonomy, it's possible to remove any contaminants or noise in the data by filtering out unwanted assignments based on the taxonomic labels given to ASVs. Here, I remove any mitochondrial and chloroplast 16S sequences by excluding any ASV which contains those terms in its taxonomic label, including any ASV that is unclassified at the phylum level. We omitted the parameter `<--p-include p__>` because we are studying a poorly characterized environment where there is potential to identify novel phyla.
+
+```{r, eval=FALSE}
+#!/bin/bash
+#SBATCH --time=
+#SBATCH --account=<group-ID>
+#SBATCH --mem=
+
+export APPTAINER_BIND=/project/6011879/<user-ID>/:/data
+export APPTAINER_WORKDIR=${SLURM_TMPDIR}
+
+module load qiime2/2023.5
+
+#for sediment samples
+qiime taxa filter-table \
+--i-table /data/amplicon-analysis/filtered_feature-table_sediments.qza \
+--i-taxonomy /data/amplicon-analysis/classification_sediments.qza \
+--p-exclude mitochondria,chloroplast \
+--o-filtered-table /data/amplicon-analysis/final_table-sediments.qza
+
+ qiime feature-table summarize \
+ --i-table /data/amplicon-analysis/final-table_sediments.qza \
+ --o-visualization /data/amplicon-analysis/summaries/final_table-sediments.qzv
+
+
+#for bird fecal samples
+qiime taxa filter-table \
+--i-table /data/amplicon-analysis/filtered_feature-table_birds.qza \
+--i-taxonomy /data/amplicon-analysis/classification_birds.qza \
+--p-exclude mitochondria,chloroplast \
+--o-filtered-table /data/amplicon-analysis/final_table-birds.qza
+
+qiime feature-table summarize \
+ --i-table /data/amplicon-analysis/final-table_birds.qza \
+ --o-visualization /data/amplicon-analysis/summaries/final_table-birds.qzv
+
+#for the merged table
+qiime taxa filter-table \
+--i-table /data/amplicon-analysis/merged-table.qza \
+--i-taxonomy /data/amplicon-analysis/classification.qza \
+--p-exclude mitochondria,chloroplast \
+--o-filtered-table /data/amplicon-analysis/final_merged-table.qza
+
+qiime feature-table summarize \
+ --i-table /data/amplicon-analysis/final_merged-table.qza \
+ --o-visualization /data/amplicon-analysis/summaries/final_merged-table.qzv
+```
+
+
+## **Grouping feature tables**
+
+Next, let's take the merged feature table and create a grouped feature table that takes the sum of all of the feature counts from each group. This table will be useful later on in the analysis when we are visualizing data. To group all of the samples, you can use the QIIME2 platform to make a feature table that sums up all the feature counts for every featureID according to each sample group with the `qiime feature-table group` function. This is done using the accompanying [metadata.csv](https://github.com/johannabosch/QIIME2_for_Graham/blob/main) files, which specify which samples are a part of which group under the column titled `group`.
+
+To get a better idea of what is meant by the term 'grouping', take some of the data we are using here as an example. In this table below, there are 2 northern gannet (*Morus_bassanus*) samples and 2 black-legged kittiwake (*Rissa_tridactyla*) samples. In the metadata file, the column group contains the scientific names for each seabird species, so when you run the grouping command and specifiy this column the feature table will be summed up accordingly. Right now this feature table (assigned to the term `bird_features`) contains feature counts for every sample individually, but we want it to be grouped, so that it looks like Table 2:
+
+**Table 1. Structure of bird_features file:**
+
+|FeatureID|NOGA-01|NOGA-02|BLKI-01|BLKI-02|
+|---------|-------|-------|-------|-------|
+|4595dec6ed...|3498|10022|1244|589|
+
+
+**Table 2. Structure of a grouped bird_features file:**
+
+|FeatureID|Morus_bassanus|Rissa_tridactyla|
+|---------|----|----|
+|4595dec6ed...|13520|1833|
+
+
+To group the `final_merged-table.qza`, use the following command:
+```{r, eval=FALSE}
+#!/bin/bash
+#SBATCH --time=
+#SBATCH --account=<group-ID>
+#SBATCH --mem=
+
+export APPTAINER_BIND=/project/6011879/<user-ID>/:/data
+export APPTAINER_WORKDIR=${SLURM_TMPDIR}
+
+module load qiime2/2023.5
+
+qiime feature-table group \
+ --i-table /data/amplicon-analysis/final_merged-table.qza \
+ --p-axis sample \
+ --m-metadata-file /data/amplicon-analysis/metadata/metadata.csv \
+ --m-metadata-column group \
+ --p-mode sum \
+ --o-grouped-table /data/amplicon-analysis/grouped-table.qza
+
+qiime feature-table summarize \
+ --i-table /data/amplicon-analysis/grouped-table.qza \
+ --o-visualization /data/amplicon-analysis/summaries/grouped-table.qzv
+```
+
+If you're working the seabird and sediments data, you now have a table that contains all of the data, summed up by each group listed in the `metedata-grouped.csv` table.
+___
+
+&nbsp;
+<hr />
+<p style="text-align: center;">Github: [johannabosch](https://github.com/johannabosch) </a></p>
+<p style="text-align: center;"><span style="color: #808080;"><em>yohannabosch@gmail.com</em></span></p>
+
+<!-- Add icon library -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<!-- Add font awesome icons -->
+<p style="text-align: center;">
+    <a href="https://www.instagram.com/yohannabosch/" class="fa fa-instagram"></a>
+    <a href="https://www.linkedin.com/in/yan-holtz-2477534a/" class="fa fa-linkedin"></a>
+    <a href="https://github.com/johannabosch/" class="fa fa-github"></a>
+</p>
+
+&nbsp;
+

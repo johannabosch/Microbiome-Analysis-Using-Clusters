@@ -1,0 +1,62 @@
+# **Resources:**
+
+Here are some resources that are helpful for running the analysis
+
+## **Data in this analysis**
+
+Download to data from this analysis [Github repo](https://github.com/johannabosch/QIIME2_for_Graham/upload/main)
+(See Bosch et al. **[2]**)
+
+* To download the metadata files: https://github.com/johannabosch/QIIME2_for_Graham/tree/main/metadata
+
+* To download the 2 rawdata files: https://drive.google.com/drive/folders/1mwfqLjyuLIpHO0KuhRAuxgYXjnbp1iQH?usp=sharing
+
+## **Other resources**
+
+This analysis uses various software and tools all made available through the Graham cluster. These are some of the coding languages, tools and software we used in this analysis: 
+
+
+> **[R/RStudio](https://www.r-project.org/):** R and RStudio are utilized for generating plots using the QIIME2R and Phyloseq packages. R is a statistical programming language widely employed in data analysis and visualization, while RStudio provides an integrated development environment (IDE) for working with R.
+
+> **[FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/):** FASTQC is a quality control tool used to assess the quality of sequencing data.
+
+> **[MultiQC](https://multiqc.info/):** MultiQC is a tool that aggregates results from multiple bioinformatics analyses into a single, comprehensive report to evaluate and summarize quality control metrics. 
+
+> **[QIIME2](https://qiime2.org/):** QIIME2 is a powerful microbiome analysis platform used extensively in this analysis. It provides a comprehensive suite of tools for processing, analyzing, and visualizing microbiome data.
+
+
+Near the end of this analysis, we export the final files from the cluster to a local computer (your computer) and use two different R packages locally to run a few other analyses and plot a taxonomic heatmap and barplot. While QIIME2 does offer heatmap/barplot capabilities, the aesthetic features are more limited than QIIME2R and Phyloseq. To use QIIME2R and Phyloseq on your local computer, make sure you have [R and RStudio](https://rstudio-education.github.io/hopr/starting.html) installed.
+
+> [**QIIME2R**](https://github.com/jbisanz/qiime2R): QIIME2R is an R package that enables integration between QIIME2 and R. It allows importing QIIME2 artifacts and visualizing data within the R environment, and offers further data exploration beyond what QIIME2 currently offers.
+
+> [**Phyloseq**](https://joey711.github.io/phyloseq/): Phyloseq is an R package that works seamlessly with QIIME2 data and provides a flexible framework for modifying and visualizing data.
+
+
+Some Digital Alliance pages that are worth checking out:
+
+* Storing data on the cluster
+https://docs.alliancecan.ca/wiki/Storage_and_file_management#Best_practices
+
+* Using Apptainer on a cluster: https://docs.alliancecan.ca/wiki/Apptainer
+
+* Using QIIME2 on a cluster: https://docs.alliancecan.ca/wiki/QIIME
+
+
+___
+
+&nbsp;
+<hr />
+<p style="text-align: center;">Github: [johannabosch](https://github.com/johannabosch) </a></p>
+<p style="text-align: center;"><span style="color: #808080;"><em>yohannabosch@gmail.com</em></span></p>
+
+<!-- Add icon library -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<!-- Add font awesome icons -->
+<p style="text-align: center;">
+    <a href="https://www.instagram.com/yohannabosch/" class="fa fa-instagram"></a>
+    <a href="https://www.linkedin.com/in/yan-holtz-2477534a/" class="fa fa-linkedin"></a>
+    <a href="https://github.com/johannabosch/" class="fa fa-github"></a>
+</p>
+
+&nbsp;

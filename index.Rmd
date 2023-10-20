@@ -1,0 +1,42 @@
+--- 
+title: "16S Microbiome Analysis on a Computing Cluster"
+author: "Johanna Bosch"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+documentclass: book
+url: https://github.com/johannabosch/QIIME2_for_Graham
+github-repo: johannabosch/QIIME2_for_Graham
+output: 
+  bookdown::html_book:
+    theme: united
+    highlight: haddock
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: true
+---
+
+#   Welcome! {-}
+
+This book can be used to learn how to conduct a comparative 16S amplicon analysis using QIIME2 on the Digital Research Alliance of Canada's Graham cluster. All of the references in this book are cited by number, you can find the References section at the end of this book.
+
+The project methods described here are formally reviewed and cited in **Bosch J. 2023 *From Seabirds to Sediments: The ecological footprint of seabirds at a prominent North Atlantic breeding colony tracked using a multi-proxy paleolimnological approach* [unpubl.]. Newfoundland, CA: Memorial University of Newfoundland** **[1]**. Here, I cover each command and tool that I used in the analysis, step-by-step. I wanted to make an analysis review that helps new users, like me, get through the nitty-gritty process of learning how to use a computing cluster to analyze genomic data. The review is in a tutorial format, with explanations on how I did things but also ways you could improve the analysis or even make it your own. I analyzed my amplicon sequencing data using QIIME2 on  Compute Canada's Graham cluster, a resource offered by the Digital Alliance of Canada. This method of analysis offers several advantages, including efficient processing of large datasets, access to a collaborative community of researchers, an extremely helpful customer support team, and, most importantly, the flexibility of accessing files and performing analyses from any laptop or desktop computer with internet access.
+
+___
+
+&nbsp;
+<hr />
+<p style="text-align: center;">Github: [johannabosch](https://github.com/johannabosch) </a></p>
+<p style="text-align: center;"><span style="color: #808080;"><em>yohannabosch@gmail.com</em></span></p>
+
+<!-- Add icon library -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<!-- Add font awesome icons -->
+<p style="text-align: center;">
+    <a href="https://www.instagram.com/yohannabosch/" class="fa fa-instagram"></a>
+    <a href="https://www.linkedin.com/in/yan-holtz-2477534a/" class="fa fa-linkedin"></a>
+    <a href="https://github.com/johannabosch/" class="fa fa-github"></a>
+</p>
+
+&nbsp;

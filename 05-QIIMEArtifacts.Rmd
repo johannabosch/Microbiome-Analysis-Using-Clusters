@@ -1,0 +1,142 @@
+# **GETTING STARTED WITH QIIME2**
+
+At this point in the analysis, QIIME2 should be ready to go and you should understand how to use Apptainer to run qiime commands. In this next section, I review how to take your rawdata files and convert them into a usable format for the QIIME2 platform.
+
+## **Creating artifact files**
+
+To manipulate and analyze sequencing data in QIIME2, all data has to be converted to a QIIME2 artifact file (.QZA) or visualization file (.QZV). This means all the sequencing data that is in .FASTQ files needs to be compiled into one .QZA formatted file. These artifact files are kept in the main directory for easy access, in this case **/amplicon-analysis**.
+
+### Import the .FASTQ files
+Start by moving to the /amplicon-analysis directory. 
+Copy and paste the following script called `import.sh` into nano and edit accordingly:
+```{r, eval=FALSE}
+#!/bin/bash
+#SBATCH --time=
+#SBATCH --account=<group-name>
+#SBATCH --mem=
+
+export APPTAINER_BIND=/project/6011879/<user-ID>/:/data
+export APPTAINER_WORKDIR=${SLURM_TMPDIR}
+
+module load qiime2/2023.5
+
+#for bird samples
+qiime tools import \
+ --type 'SampleData[PairedEndSequencesWithQuality]' \
+ --input-path /data/amplicon-analysis/rawdata/birds/ \
+ --input-format CasavaOneEightSingleLanePerSampleDirFmt \
+ --output-path /data/amplicon-analysis/PEreads_birds.qza
+
+#for sediment samples
+qiime tools import \
+ --type 'SampleData[PairedEndSequencesWithQuality]' \
+ --input-path /data/amplicon-analysis/rawdata/sediments/ \
+ --input-format CasavaOneEightSingleLanePerSampleDirFmt \
+ --output-path /data/amplicon-analysis/PEreads_sediments.qza
+
+```
+
+
+
+Above, the command was written as follows:
+
+* The data file types we used were denoted as `SampleData[PairedEndSequencesWithQuality]`, they are paired end sequences with quality information in each file (hence the .FASTQ file format)
+
+* The input type used was `CasavaOneEightSingleLanePerSampleDirFmt`
+
+* There are two fastq.qz files for each sample in the study (forward or reverse reads for that sample).
+
+Run the bash script using the command `sbatch import.sh` in your working directory. The qiime import command can take awhile depending on how many samples you have and their size. Check to see that the script is still running using the `sq -u <user-ID>` command. 
+
+```{r, eval=FALSE}
+sbatch import.sh
+
+#check the slurm file
+#check the artifact files are in the main directory
+```
+
+### Inspect the .QZA files 
+
+Now that all of our data for the bird and sediment samples are compiled into an artifact file, we can inspect it directly in the home directory using the `qiime tools peek` command:
+```{r, eval=FALSE}
+#!/bin/bash
+#SBATCH --time=
+#SBATCH --account=<group-name>
+#SBATCH --mem=
+
+export APPTAINER_BIND=/project/6011879/<user-ID>/:/data
+export APPTAINER_WORKDIR=${SLURM_TMPDIR}
+
+module load qiime2/2023.5
+
+#then running the peek command
+qiime tools peek /data/amplicon-analysis/PEreads_birds.qza
+qiime tools peek /data/amplicon-analysis/PEreads_sediments.qza
+```
+
+The output within the slurm file that was produced after running the `sbatch` command will look something as follows:
+```{r, eval=FALSE}
+UUID:        23ced561-437b-44b9-bacb-1f24e7ebf19d       #for the bird samples
+Type:        SampleData[PairedEndSequencesWithQuality]
+Data format: SingleLanePerSamplePairedEndFastqDirFmt
+UUID:        cdfbe42a-b687-4a5b-a1d2-e6d0205414a1       #for the sediment samples
+Type:        SampleData[PairedEndSequencesWithQuality]
+Data format: SingleLanePerSamplePairedEndFastqDirFmt
+```
+
+## **Visualizing artifact files**
+It's good practice to always visualize your data after manipulating it to see if any reads were lost. You can do this by creating a QIIME2 summary report file (.QZV). First start by making a directory called `summaries` to store all of your summary files, there will be a lot of them.
+
+### Create a summary report
+Create visualization (.QZV) files out of the .QZA files we just made with a summary command in this `summaries.sh` script. You can also add this `qiime demux summarize` command to the end of the previous `import.sh` job script.
+
+```{r, eval=FALSE}
+#!/bin/bash
+#SBATCH --time=
+#SBATCH --account=<group-name>
+#SBATCH --mem=
+
+export APPTAINER_BIND=/project/6011879/<user-ID>/:/data
+export APPTAINER_WORKDIR=${SLURM_TMPDIR}
+
+module load qiime2/2023.5
+
+# for bird samples
+qiime demux summarize \
+--i-data /data/amplicon-analysis/PEreads_birds.qza \
+--o-visualization /data/amplicon-analysis/summaries/PEreads-birds.qzv
+
+# for sediment samples
+qiime demux summarize \
+--i-data /data/amplicon-analysis/PEreads_sediments.qza \
+--o-visualization /data/amplicon-analysis/summaries/PEreads-sediments.qzv
+```
+
+Now you can exit the cluster and re-enter using the SFTP to pull your .QZV files off of the cluster and view the resulting artifact file contents on the [QIIME2-view Web-App](view.qiime2.org). 
+
+### Using QIIME2's web-app
+
+To use QIIME2-View, simply drag and drop the file onto the view.qiime2.org dashboard, and take a look at how many reads are in each file. While it can be kind of repetitive to log on and off of the cluster just to view files this way, this SFTP method is used often in the QIIME2 analysis when you use a computing cluster as it allows you to see how many reads are lost during the read joining and quality filtering stages. The results from the quality checking step that is covered in the next section can also be used to compare the results from the QIIME2 summary command that was just used.
+
+To read more about using the viewing web-app visit the [QIIME2 View Info Page](https://view.qiime2.org/about).
+
+___
+
+&nbsp;
+<hr />
+<p style="text-align: center;">Github: [johannabosch](https://github.com/johannabosch) </a></p>
+<p style="text-align: center;"><span style="color: #808080;"><em>yohannabosch@gmail.com</em></span></p>
+
+<!-- Add icon library -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<!-- Add font awesome icons -->
+<p style="text-align: center;">
+    <a href="https://www.instagram.com/yohannabosch/" class="fa fa-instagram"></a>
+    <a href="https://www.linkedin.com/in/yan-holtz-2477534a/" class="fa fa-linkedin"></a>
+    <a href="https://github.com/johannabosch/" class="fa fa-github"></a>
+</p>
+
+&nbsp;
+
+___

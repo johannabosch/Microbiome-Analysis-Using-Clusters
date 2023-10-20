@@ -1,0 +1,37 @@
+# **Technical Support**
+
+Have questions about running your analysis on an Alliance cluster?
+E-mail the Alliance support team if you have trouble with your account or even if you have questions about your job scripts or commands while running an analysis. They have a helpful team of individuals who will reply to your e-mails promptly and point you in the right direction.
+
+E-mail|Purpose|
+|----|-----|
+accounts@tech.alliancecan.ca | For questions about accounts | 
+renewals@tech.alliancecan.ca | For questions about account renewals |
+globus@tech.alliancecan.ca | For questions about Globus file transfer services |
+cloud@tech.alliancecan.ca | For questions about using Cloud resources |
+support@tech.alliancecan.ca | For any other questions, including questions related to your bioinformatics analysis |
+
+> **NOTE:** If you are going to contact support, make sure to read this technical support page first to know what to include in your message: (https://docs.alliancecan.ca/wiki/Technical_support)
+
+
+
+___
+
+
+
+&nbsp;
+<hr />
+<p style="text-align: center;">Github: [johannabosch](https://github.com/johannabosch) </a></p>
+<p style="text-align: center;"><span style="color: #808080;"><em>yohannabosch@gmail.com</em></span></p>
+
+<!-- Add icon library -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<!-- Add font awesome icons -->
+<p style="text-align: center;">
+    <a href="https://www.instagram.com/yohannabosch/" class="fa fa-instagram"></a>
+    <a href="https://www.linkedin.com/in/yan-holtz-2477534a/" class="fa fa-linkedin"></a>
+    <a href="https://github.com/johannabosch/" class="fa fa-github"></a>
+</p>
+
+&nbsp;

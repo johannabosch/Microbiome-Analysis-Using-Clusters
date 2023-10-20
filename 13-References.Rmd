@@ -1,0 +1,63 @@
+# **References**
+
+## **References** {-}
+
+* **[1]** Bosch J. 2023 From Seabirds to Sediments: The ecological footprint of seabirds at a prominent North Atlantic breeding colony tracked using a multi-proxy paleolimnological approach [unpubl.]. Newfoundland, CA: Memorial University of Newfoundland
+
+* **[2]** Parada AE, Needham DM, Fuhrman JA. 2016 Every base matters: assessing small subunit rRNA primers for marine microbiomes with mock communities, time series and global field samples: Primers for marine microbiome studies. Environmental Microbiology. 18(5):1403–14. doi.org/10.1111/1462-2920.13023   
+
+* **[3}** Walters W, Hyde ER, Berg-Lyons D, Ackermann G, Humphrey G, Parada A, et al. 2016 Improved Bacterial 16S rRNA Gene (V4 and V4-5) and Fungal Internal Transcribed Spacer Marker Gene Primers for Microbial Community Surveys. Bik H, editor. mSystems. 1(1):e00009-15. 10.1128/msystems.00009-15
+
+* **[4]** Bolyen E, Rideout JR, Dillon MR, Bokulich NA, Abnet CC, Al-Ghalith GA, et al. 2019 Reproducible, interactive, scalable and extensible microbiome data science using QIIME 2. Nature Biotechnology 37: 852–857. 10.1038/s41587-019-0209-9
+
+* **[5]** Singularity Developers (2021) Singularity. 10.5281/zenodo.1310023 https://doi.org/10.5281/zenodo.1310023
+
+* **[6]** Andrews, S. 2010 FastQC: A Quality Control Tool for High Throughput Sequence Data. URL: https://www.bioinformatics.babraham.ac.uk/projects/fastqc/
+
+* **[7]** Ewels P, Magnusson M, Lundin S, Käller M. 2016 MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics. 1;32(19):3047-8.
+
+* **[8]** Martin M. 2011 Cutadapt removes adapter sequences from high-throughput sequencing reads. EMBnet. journal, 17(1):pp–10. 10.14806/ej.17.1.200.
+
+* **[9]** Rognes T, Flouri T, Nichols B, Quince C, Mahé F. 2016 Vsearch: a versatile open source tool for metagenomics. PeerJ, 4:e2584. 10.7717/peerj.2584.
+
+* **[10]** Bokulich NA, Subramanian S, Faith JJ, Gevers D, Gordon JI, Knight R, Mills DA, and Caporaso GJ. 2013 Quality-filtering vastly improves diversity estimates from illumina amplicon sequencing. Nature methods, 10(1):57. 10.1038/nmeth.2276.
+
+* **[11]** Edgar, Robert C. 2016 "UNOISE2: improved error-correction for Illumina 16S and ITS amplicon sequencing." BioRxiv. 081257.
+
+* **[12]** Amir A, McDonald D, Navas-Molina JA, Kopylova E, Morton JT, Xu ZZ, et al. 2017 Deblur rapidly resolves single-nucleotide community sequence patterns. MSystems, 2(2):e00191–16
+
+* **[13]**  Eddy SR. 2011 Accelerated profile HMM searches. PLOS Computational Biology, 7(10):1–16. 10.1371/journal.pcbi.1002195.
+
+* **[14]** Janssen S, McDonald D, Gonzalez A, Navas-Molina JA, Jiang L, Xu ZZ, et al. 2018 Phylogenetic placement of exact amplicon sequences improves associations with clinical information. mSystems, doi:10.1128/mSystems. 00021-18.
+
+* **[15]** Matsen FA, Kodner RB, Armbrust EV. 2010 Pplacer: linear time maximum-likelihood and Bayesian phylogenetic placement of sequences onto a fixed reference tree. BMC Bioinformatics, 11(1):538.
+
+* **[16]** Matsen FA, Hoffman NG, Gallagher A, Stamatakis A. 2012 A format for phylogenetic placements. PLOS ONE, 7(2):1–4. URL: https://doi.org/10.1371/journal.pone.0031009, 10.1371/journal.pone.0031009.
+
+* **[17]** NCBI Resource Coordinators. 2017 Database resources of the national center for biotechnology information. Nucleic Acids Research, 45(D1):D12–D17. 10.1093/nar/gkw1071.
+
+* **[18]** Johnson M, Zaretskaya I, Raytselis Y, Merezhuk Y, McGinnis S, and Madden TL. 2008 Ncbi blast: a better web interface. Nucleic Acids Research, 36(suppl_2):W5–W9. 10.1093/nar/gkn201.
+
+* **[19]** McMurdie PJ, Holmes S. 2013 Phyloseq: An R Package for Reproducible Interactive Analysis and Graphics of Microbiome Census Data. PLoS ONE. 8(4):e61217. doi.org/10.1371/journal.pone.0061217
+
+
+___
+
+
+&nbsp;
+<hr />
+<p style="text-align: center;">Github: [johannabosch](https://github.com/johannabosch) </a></p>
+<p style="text-align: center;"><span style="color: #808080;"><em>yohannabosch@gmail.com</em></span></p>
+
+<!-- Add icon library -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<!-- Add font awesome icons -->
+<p style="text-align: center;">
+    <a href="https://www.instagram.com/yohannabosch/" class="fa fa-instagram"></a>
+    <a href="https://www.linkedin.com/in/yan-holtz-2477534a/" class="fa fa-linkedin"></a>
+    <a href="https://github.com/johannabosch/" class="fa fa-github"></a>
+</p>
+
+&nbsp;
+
