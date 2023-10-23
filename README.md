@@ -8,12 +8,7 @@ To access the tutorial, click this link: https://johannabosch.github.io/Microbio
 
 ### 🧬 **A brief review of the data used in this analysis:**
 
-  The data used in this analysis was taken from a thesis project that focuses on the transfer of seabird nutrients from a seabird nesting colony in Cape St. Mary’s Ecological Reserve (Newfoundland, Canada) [^3]. Review this graphical abstract to understand the ecological processes taking place here:
-
-![image](https://github.com/johannabosch/QIIME2_for_Graham/assets/126937348/9ec5fe4e-161f-4e4c-9c4b-d93eb391cef2)
->  <sup> **Figure:** Seabird nutrient transfer from Bird Rock, in Cape St. Mary’s Ecological Reserve (Newfoundland) to a pond 240 m away from the seabird colony. Seen in the illustration are northern gannets (*Morus bassanus*) and black-legged kittiwakes (*Rissa tridactyla*), which both nest within the Reserve on an annual basis. [^3] <sup>                                                          
-
-Using targeted *16S* amplicon sequencing, we assessed how the transfer of nutrients by seabirds in Cape St. Mary's impacts the bacterial composition of sediments taken from ponds nearby a colony. We used QIIME2, a next-generation microbiome bioinformatics suite that offers a free, user-friendly, and open source platform for both advanced and beginner researchers [^1].
+  The data used in this analysis was taken from a thesis project that focuses on the transfer of seabird nutrients from a seabird nesting colony in Cape St. Mary’s Ecological Reserve (Newfoundland, Canada) [^3]. Using targeted *16S* amplicon sequencing, we assessed how the transfer of nutrients by seabirds in Cape St. Mary's impacts the bacterial composition of sediments taken from ponds nearby a colony. We used QIIME2, a next-generation microbiome bioinformatics suite that offers a free, user-friendly, and open source platform for both advanced and beginner researchers [^1].
 
 ___
 
