@@ -9,11 +9,8 @@ ___
 
 The data used in this analysis is from a project that focuses on the transfer of seabird nutrients from a seabird nesting colony to nearby freshwater ponds **[1]**. View the figure below to understand the ecological processes taking place in my study sites.
 
-<center>![](https://github.com/johannabosch/QIIME2_for_Graham/assets/126937348/9ec5fe4e-161f-4e4c-9c4b-d93eb391cef2)</center>
-
 ```{r, echo=FALSE, fig.cap="Seabird nutrient transfer from Bird Rock, in Cape St. Mary's Ecological Reserve (Newfoundland) to a pond 240 m away from the seabird colony. Seen in the illustration are northern gannets (Morus bassanus) and black-legged kittiwakes (Rissa tridactyla), which both nest within the Reserve on an annual basis"}
 knitr::include_graphics('images/CSM_Nutrient_Transfer_Figure.png')
-
 ```
 
 Using targeted 16S amplicon sequencing, we first assessed the gut microbiome composition of 4 species of seabirds that nest in Newfoundland. Next, we assessed how the bacterial composition of sediments, taken from ponds nearby a colony, are affected by seabird nutrient transfer.
