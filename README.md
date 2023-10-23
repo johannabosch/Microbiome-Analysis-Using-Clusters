@@ -4,6 +4,8 @@ This is a public repo that can be used to learn how to conduct a comparative 16S
 
 The tutorial is written in Bookdown format and covers each command and tool used step-by-step to run these commands in the cluster, and export your data afterwards for further downstream analysis. The analysis methods are formally reviewed in Bosch et al. [^3], and outline each plug-in that is used, their associated references and the results of the study - methods are outlined in Chapter 3. 
 
+To access the tutorial, click this link: https://johannabosch.github.io/Microbiome-Analysis-Using-Clusters/
+
 ### 🧬 **A brief review of the data used in this analysis:**
 
   The data used in this analysis was taken from a thesis project that focuses on the transfer of seabird nutrients from a seabird nesting colony in Cape St. Mary’s Ecological Reserve (Newfoundland, Canada) [^3]. Review this graphical abstract to understand the ecological processes taking place here:
