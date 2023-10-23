@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>1 INTRODUCTION | 16S Microbiome Analysis on a Computing Cluster</title>
+  <meta name="description" content="1 INTRODUCTION | 16S Microbiome Analysis on a Computing Cluster" />
+  <meta name="generator" content="bookdown 0.34 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="1 INTRODUCTION | 16S Microbiome Analysis on a Computing Cluster" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta name="github-repo" content="johannabosch/QIIME2_for_Graham" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="1 INTRODUCTION | 16S Microbiome Analysis on a Computing Cluster" />
+  
+  
+  
+
+<meta name="author" content="Johanna Bosch" />
+
+
+<meta name="date" content="2023-10-23" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="index.html"/>
+<link rel="next" href="compute-canada-basics.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Comparative 16S Amplicon Analysis using QIIME2 on a computing cluster: Tutorial and Resources</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome!</a></li>
+<li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> <strong>INTRODUCTION</strong></a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="introduction.html"><a href="introduction.html#a-brief-project-review"><i class="fa fa-check"></i><b>1.1</b> <strong>A brief project review</strong></a>
+<ul>
+<li class="chapter" data-level="1.1.1" data-path="introduction.html"><a href="introduction.html#study-species-and-sites"><i class="fa fa-check"></i><b>1.1.1</b> Study species and sites</a></li>
+<li class="chapter" data-level="1.1.2" data-path="introduction.html"><a href="introduction.html#sequencing-library-prep"><i class="fa fa-check"></i><b>1.1.2</b> Sequencing &amp; library prep</a></li>
+<li class="chapter" data-level="1.1.3" data-path="introduction.html"><a href="introduction.html#files-after-sequencing"><i class="fa fa-check"></i><b>1.1.3</b> Files after sequencing</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="introduction.html"><a href="introduction.html#dna-analysis"><i class="fa fa-check"></i><b>1.2</b> <strong>DNA analysis</strong></a>
+<ul>
+<li class="chapter" data-level="1.2.1" data-path="introduction.html"><a href="introduction.html#the-graham-cluster"><i class="fa fa-check"></i><b>1.2.1</b> The Graham cluster</a></li>
+<li class="chapter" data-level="1.2.2" data-path="introduction.html"><a href="introduction.html#data-accessibility"><i class="fa fa-check"></i><b>1.2.2</b> Data accessibility</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="compute-canada-basics.html"><a href="compute-canada-basics.html"><i class="fa fa-check"></i><b>2</b> <strong>COMPUTE CANADA BASICS</strong></a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="compute-canada-basics.html"><a href="compute-canada-basics.html#cluster-computing-basics"><i class="fa fa-check"></i><b>2.1</b> <strong>Cluster computing basics</strong></a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="compute-canada-basics.html"><a href="compute-canada-basics.html#signing-into-the-cluster"><i class="fa fa-check"></i><b>2.1.1</b> Signing into the cluster</a></li>
+<li class="chapter" data-level="2.1.2" data-path="compute-canada-basics.html"><a href="compute-canada-basics.html#basic-computing-commands"><i class="fa fa-check"></i><b>2.1.2</b> Basic computing commands</a></li>
+<li class="chapter" data-level="2.1.3" data-path="compute-canada-basics.html"><a href="compute-canada-basics.html#loading-modules"><i class="fa fa-check"></i><b>2.1.3</b> Loading modules</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="compute-canada-basics.html"><a href="compute-canada-basics.html#job-scripts"><i class="fa fa-check"></i><b>2.2</b> <strong>Job scripts </strong></a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="compute-canada-basics.html"><a href="compute-canada-basics.html#using-nano"><i class="fa fa-check"></i><b>2.2.1</b> Using Nano</a></li>
+<li class="chapter" data-level="2.2.2" data-path="compute-canada-basics.html"><a href="compute-canada-basics.html#writing-a-bash-script"><i class="fa fa-check"></i><b>2.2.2</b> Writing a bash script</a></li>
+<li class="chapter" data-level="2.2.3" data-path="compute-canada-basics.html"><a href="compute-canada-basics.html#running-scripts-on-the-scheduler"><i class="fa fa-check"></i><b>2.2.3</b> Running scripts on the scheduler</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="importing-data.html"><a href="importing-data.html"><i class="fa fa-check"></i><b>3</b> <strong>IMPORTING DATA</strong></a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="importing-data.html"><a href="importing-data.html#getting-organized"><i class="fa fa-check"></i><b>3.1</b> <strong>Getting organized</strong></a></li>
+<li class="chapter" data-level="3.2" data-path="importing-data.html"><a href="importing-data.html#moving-data-to-the-cluster"><i class="fa fa-check"></i><b>3.2</b> <strong>Moving data to the cluster</strong></a></li>
+<li class="chapter" data-level="3.3" data-path="importing-data.html"><a href="importing-data.html#organizing-.fastq-files"><i class="fa fa-check"></i><b>3.3</b> <strong>Organizing .FASTQ files</strong></a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="importing-data.html"><a href="importing-data.html#unzip-rawdata-files"><i class="fa fa-check"></i><b>3.3.1</b> Unzip rawdata files</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="qiime2-on-the-cluster.html"><a href="qiime2-on-the-cluster.html"><i class="fa fa-check"></i><b>4</b> <strong>QIIME2 ON THE CLUSTER</strong></a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="qiime2-on-the-cluster.html"><a href="qiime2-on-the-cluster.html#use-qiime2-via-apptainer"><i class="fa fa-check"></i><b>4.1</b> <strong>Use QIIME2 via Apptainer</strong></a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="qiime2-on-the-cluster.html"><a href="qiime2-on-the-cluster.html#finding-physical-paths"><i class="fa fa-check"></i><b>4.1.1</b> Finding physical paths</a></li>
+<li class="chapter" data-level="4.1.2" data-path="qiime2-on-the-cluster.html"><a href="qiime2-on-the-cluster.html#using-apptainer-mounts"><i class="fa fa-check"></i><b>4.1.2</b> Using Apptainer mounts</a></li>
+<li class="chapter" data-level="4.1.3" data-path="qiime2-on-the-cluster.html"><a href="qiime2-on-the-cluster.html#getting-help"><i class="fa fa-check"></i><b>4.1.3</b> Getting help</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="getting-started-with-qiime2.html"><a href="getting-started-with-qiime2.html"><i class="fa fa-check"></i><b>5</b> <strong>GETTING STARTED WITH QIIME2</strong></a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="getting-started-with-qiime2.html"><a href="getting-started-with-qiime2.html#creating-artifact-files"><i class="fa fa-check"></i><b>5.1</b> <strong>Creating artifact files</strong></a>
+<ul>
+<li class="chapter" data-level="5.1.1" data-path="getting-started-with-qiime2.html"><a href="getting-started-with-qiime2.html#import-the-.fastq-files"><i class="fa fa-check"></i><b>5.1.1</b> Import the .FASTQ files</a></li>
+<li class="chapter" data-level="5.1.2" data-path="getting-started-with-qiime2.html"><a href="getting-started-with-qiime2.html#inspect-the-.qza-files"><i class="fa fa-check"></i><b>5.1.2</b> Inspect the .QZA files</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="getting-started-with-qiime2.html"><a href="getting-started-with-qiime2.html#visualizing-artifact-files"><i class="fa fa-check"></i><b>5.2</b> <strong>Visualizing artifact files</strong></a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="getting-started-with-qiime2.html"><a href="getting-started-with-qiime2.html#create-a-summary-report"><i class="fa fa-check"></i><b>5.2.1</b> Create a summary report</a></li>
+<li class="chapter" data-level="5.2.2" data-path="getting-started-with-qiime2.html"><a href="getting-started-with-qiime2.html#using-qiime2s-web-app"><i class="fa fa-check"></i><b>5.2.2</b> Using QIIME2’s web-app</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="data-preprocessing.html"><a href="data-preprocessing.html"><i class="fa fa-check"></i><b>6</b> <strong>DATA PREPROCESSING</strong></a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="data-preprocessing.html"><a href="data-preprocessing.html#quality-assessment"><i class="fa fa-check"></i><b>6.1</b> <strong>Quality assessment</strong></a>
+<ul>
+<li class="chapter" data-level="6.1.1" data-path="data-preprocessing.html"><a href="data-preprocessing.html#fastqc"><i class="fa fa-check"></i><b>6.1.1</b> FastQC</a></li>
+<li class="chapter" data-level="6.1.2" data-path="data-preprocessing.html"><a href="data-preprocessing.html#multiqc"><i class="fa fa-check"></i><b>6.1.2</b> MultiQC</a></li>
+<li class="chapter" data-level="6.1.3" data-path="data-preprocessing.html"><a href="data-preprocessing.html#visualizing-data-quality"><i class="fa fa-check"></i><b>6.1.3</b> Visualizing data quality</a></li>
+<li class="chapter" data-level="6.1.4" data-path="data-preprocessing.html"><a href="data-preprocessing.html#plot-types"><i class="fa fa-check"></i><b>6.1.4</b> Plot types</a></li>
+<li class="chapter" data-level="6.1.5" data-path="data-preprocessing.html"><a href="data-preprocessing.html#for-this-study"><i class="fa fa-check"></i><b>6.1.5</b> For this study</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="data-preprocessing.html"><a href="data-preprocessing.html#data-cleaning"><i class="fa fa-check"></i><b>6.2</b> <strong>Data Cleaning</strong></a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="data-preprocessing.html"><a href="data-preprocessing.html#trimming-primers"><i class="fa fa-check"></i><b>6.2.1</b> Trimming primers</a></li>
+<li class="chapter" data-level="6.2.2" data-path="data-preprocessing.html"><a href="data-preprocessing.html#summarizing-data"><i class="fa fa-check"></i><b>6.2.2</b> Summarizing data</a></li>
+<li class="chapter" data-level="6.2.3" data-path="data-preprocessing.html"><a href="data-preprocessing.html#joining-read-pairs"><i class="fa fa-check"></i><b>6.2.3</b> Joining read pairs</a></li>
+<li class="chapter" data-level="6.2.4" data-path="data-preprocessing.html"><a href="data-preprocessing.html#quality-filtering"><i class="fa fa-check"></i><b>6.2.4</b> Quality filtering</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="data-preprocessing.html"><a href="data-preprocessing.html#data-transformation"><i class="fa fa-check"></i><b>6.3</b> <strong>Data transformation</strong></a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="data-preprocessing.html"><a href="data-preprocessing.html#constructing-asvs"><i class="fa fa-check"></i><b>6.3.1</b> Constructing ASV’s</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="data-preprocessing.html"><a href="data-preprocessing.html#data-reduction"><i class="fa fa-check"></i><b>6.4</b> <strong>Data reduction</strong></a>
+<ul>
+<li class="chapter" data-level="6.4.1" data-path="data-preprocessing.html"><a href="data-preprocessing.html#filtering-unique-reads"><i class="fa fa-check"></i><b>6.4.1</b> Filtering unique reads</a></li>
+</ul></li>
+<li class="chapter" data-level="6.5" data-path="data-preprocessing.html"><a href="data-preprocessing.html#manipulating-tables"><i class="fa fa-check"></i><b>6.5</b> <strong>Manipulating tables</strong></a>
+<ul>
+<li class="chapter" data-level="6.5.1" data-path="data-preprocessing.html"><a href="data-preprocessing.html#merging-feature-tables"><i class="fa fa-check"></i><b>6.5.1</b> Merging feature tables</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="diversity-analyses.html"><a href="diversity-analyses.html"><i class="fa fa-check"></i><b>7</b> <strong>DIVERSITY ANALYSES</strong></a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="diversity-analyses.html"><a href="diversity-analyses.html#build-a-phylogenetic-tree"><i class="fa fa-check"></i><b>7.1</b> <strong>Build a phylogenetic tree</strong></a></li>
+<li class="chapter" data-level="7.2" data-path="diversity-analyses.html"><a href="diversity-analyses.html#generating-alpha-rarefaction-curves"><i class="fa fa-check"></i><b>7.2</b> <strong>Generating alpha rarefaction curves</strong></a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="diversity-analyses.html"><a href="diversity-analyses.html#finding-max-depth"><i class="fa fa-check"></i><b>7.2.1</b> Finding max depth</a></li>
+<li class="chapter" data-level="7.2.2" data-path="diversity-analyses.html"><a href="diversity-analyses.html#generating-the-curve"><i class="fa fa-check"></i><b>7.2.2</b> Generating the curve</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="diversity-analyses.html"><a href="diversity-analyses.html#alpha-and-beta-diversity"><i class="fa fa-check"></i><b>7.3</b> <strong>Alpha and beta diversity</strong></a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="diversity-analyses.html"><a href="diversity-analyses.html#running-diversity-analyses"><i class="fa fa-check"></i><b>7.3.1</b> Running diversity analyses</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="assigning-taxonomy.html"><a href="assigning-taxonomy.html"><i class="fa fa-check"></i><b>8</b> <strong>ASSIGNING TAXONOMY</strong></a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="assigning-taxonomy.html"><a href="assigning-taxonomy.html#classifying-asvs"><i class="fa fa-check"></i><b>8.1</b> <strong>Classifying ASV’s</strong></a>
+<ul>
+<li class="chapter" data-level="8.1.1" data-path="assigning-taxonomy.html"><a href="assigning-taxonomy.html#using-scikit-learn"><i class="fa fa-check"></i><b>8.1.1</b> Using scikit-learn</a></li>
+</ul></li>
+<li class="chapter" data-level="8.2" data-path="assigning-taxonomy.html"><a href="assigning-taxonomy.html#verifying-with-blastn"><i class="fa fa-check"></i><b>8.2</b> <strong>Verifying with BLASTn</strong></a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="assigning-taxonomy.html"><a href="assigning-taxonomy.html#filtering-contaminants"><i class="fa fa-check"></i><b>8.2.1</b> Filtering contaminants</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="assigning-taxonomy.html"><a href="assigning-taxonomy.html#grouping-feature-tables"><i class="fa fa-check"></i><b>8.3</b> <strong>Grouping feature tables</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="visualizing-taxonomic-data.html"><a href="visualizing-taxonomic-data.html"><i class="fa fa-check"></i><b>9</b> <strong>VISUALIZING TAXONOMIC DATA</strong></a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="visualizing-taxonomic-data.html"><a href="visualizing-taxonomic-data.html#exporting-data"><i class="fa fa-check"></i><b>9.1</b> <strong>Exporting data</strong></a></li>
+<li class="chapter" data-level="9.2" data-path="visualizing-taxonomic-data.html"><a href="visualizing-taxonomic-data.html#importing-q2-files-to-r"><i class="fa fa-check"></i><b>9.2</b> <strong>Importing Q2 files to R</strong></a></li>
+<li class="chapter" data-level="9.3" data-path="visualizing-taxonomic-data.html"><a href="visualizing-taxonomic-data.html#qiime2r"><i class="fa fa-check"></i><b>9.3</b> <strong>QIIME2R</strong></a>
+<ul>
+<li class="chapter" data-level="9.3.1" data-path="visualizing-taxonomic-data.html"><a href="visualizing-taxonomic-data.html#load-the-feature-table"><i class="fa fa-check"></i><b>9.3.1</b> Load the feature table</a></li>
+<li class="chapter" data-level="9.3.2" data-path="visualizing-taxonomic-data.html"><a href="visualizing-taxonomic-data.html#load-the-metadata"><i class="fa fa-check"></i><b>9.3.2</b> Load the metadata</a></li>
+<li class="chapter" data-level="9.3.3" data-path="visualizing-taxonomic-data.html"><a href="visualizing-taxonomic-data.html#load-the-taxonomic-data"><i class="fa fa-check"></i><b>9.3.3</b> Load the taxonomic data</a></li>
+<li class="chapter" data-level="9.3.4" data-path="visualizing-taxonomic-data.html"><a href="visualizing-taxonomic-data.html#parsing-taxonomic-data"><i class="fa fa-check"></i><b>9.3.4</b> Parsing taxonomic data</a></li>
+<li class="chapter" data-level="9.3.5" data-path="visualizing-taxonomic-data.html"><a href="visualizing-taxonomic-data.html#create-a-taxa-barplot"><i class="fa fa-check"></i><b>9.3.5</b> Create a taxa barplot</a></li>
+<li class="chapter" data-level="9.3.6" data-path="visualizing-taxonomic-data.html"><a href="visualizing-taxonomic-data.html#create-a-taxa-heatmap"><i class="fa fa-check"></i><b>9.3.6</b> Create a taxa heatmap</a></li>
+<li class="chapter" data-level="9.3.7" data-path="visualizing-taxonomic-data.html"><a href="visualizing-taxonomic-data.html#plot-beta-diversity"><i class="fa fa-check"></i><b>9.3.7</b> Plot beta-diversity</a></li>
+</ul></li>
+<li class="chapter" data-level="9.4" data-path="visualizing-taxonomic-data.html"><a href="visualizing-taxonomic-data.html#phyloseq"><i class="fa fa-check"></i><b>9.4</b> <strong>Phyloseq</strong></a>
+<ul>
+<li class="chapter" data-level="9.4.1" data-path="visualizing-taxonomic-data.html"><a href="visualizing-taxonomic-data.html#build-a-phyloseq-object"><i class="fa fa-check"></i><b>9.4.1</b> Build a phyloseq object</a></li>
+<li class="chapter" data-level="9.4.2" data-path="visualizing-taxonomic-data.html"><a href="visualizing-taxonomic-data.html#taxonomic-characteristics"><i class="fa fa-check"></i><b>9.4.2</b> Taxonomic characteristics</a></li>
+<li class="chapter" data-level="9.4.3" data-path="visualizing-taxonomic-data.html"><a href="visualizing-taxonomic-data.html#plot-alpha-diversity"><i class="fa fa-check"></i><b>9.4.3</b> Plot alpha-diversity</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="resources.html"><a href="resources.html"><i class="fa fa-check"></i><b>10</b> <strong>Resources:</strong></a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="resources.html"><a href="resources.html#data-in-this-analysis"><i class="fa fa-check"></i><b>10.1</b> <strong>Data in this analysis</strong></a></li>
+<li class="chapter" data-level="10.2" data-path="resources.html"><a href="resources.html#other-resources"><i class="fa fa-check"></i><b>10.2</b> <strong>Other resources</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="acknowledgments.html"><a href="acknowledgments.html"><i class="fa fa-check"></i><b>11</b> Acknowledgments</a></li>
+<li class="chapter" data-level="12" data-path="technical-support.html"><a href="technical-support.html"><i class="fa fa-check"></i><b>12</b> <strong>Technical Support</strong></a></li>
+<li class="chapter" data-level="13" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>13</b> <strong>References</strong></a>
+<ul>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html#references-1"><i class="fa fa-check"></i><strong>References</strong></a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">16S Microbiome Analysis on a Computing Cluster</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="introduction" class="section level1 hasAnchor" number="1">
+<h1><span class="header-section-number">1</span> <strong>INTRODUCTION</strong><a href="introduction.html#introduction" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>All of the methods and protocols discussed in this analysis review are outlined in Bosch et al. 2023 <strong>[1]</strong></p>
+<hr />
+<div id="a-brief-project-review" class="section level2 tabset hasAnchor" number="1.1">
+<h2><span class="header-section-number">1.1</span> <strong>A brief project review</strong><a href="introduction.html#a-brief-project-review" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The data used in this analysis is from a project that focuses on the transfer of seabird nutrients from a seabird nesting colony to nearby freshwater ponds <strong>[1]</strong>. View the figure below to understand the ecological processes taking place in my study sites.</p>
+<center>
+<img src="https://github.com/johannabosch/QIIME2_for_Graham/assets/126937348/9ec5fe4e-161f-4e4c-9c4b-d93eb391cef2" />
+</center>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-1"></span>
+<img src="images/CSM_Nutrient_Transfer_Figure.png" alt="Seabird nutrient transfer from Bird Rock, in Cape St. Mary's Ecological Reserve (Newfoundland) to a pond 240 m away from the seabird colony. Seen in the illustration are northern gannets (Morus bassanus) and black-legged kittiwakes (Rissa tridactyla), which both nest within the Reserve on an annual basis"  />
+<p class="caption">
+Figure 1.1: Seabird nutrient transfer from Bird Rock, in Cape St. Mary’s Ecological Reserve (Newfoundland) to a pond 240 m away from the seabird colony. Seen in the illustration are northern gannets (Morus bassanus) and black-legged kittiwakes (Rissa tridactyla), which both nest within the Reserve on an annual basis
+</p>
+</div>
+<p>Using targeted 16S amplicon sequencing, we first assessed the gut microbiome composition of 4 species of seabirds that nest in Newfoundland. Next, we assessed how the bacterial composition of sediments, taken from ponds nearby a colony, are affected by seabird nutrient transfer.</p>
+<div id="study-species-and-sites" class="section level3 hasAnchor" number="1.1.1">
+<h3><span class="header-section-number">1.1.1</span> Study species and sites<a href="introduction.html#study-species-and-sites" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Two different types of samples are used in the analysis, including seabird fecal swabs that were collected by an experienced seabird handler according to proper animal care handling techniques, and sediment subsamples that were taken from sediment cores collected from freshwater ponds.</p>
+<p><strong>Seabird fecal swabs = 19 total</strong></p>
+<blockquote>
+<p>Collected from 4 species of seabird nesting in Newfoundland:
+* <strong>northern gannets</strong> (<em>Morus bassanus</em>)
+* <strong>black-legged kittiwakes</strong> (<em>Rissa tridactyla</em>)
+* <strong>common murres</strong> (<em>Uria aalge</em>)
+* <strong>atlantic puffins</strong> (<em>Fratercula arctica</em>)</p>
+</blockquote>
+<p><strong>Sediment core subsamples = 12 total</strong></p>
+<blockquote>
+<p>Collected from subsamples of sediment cores taken from 3 ponds in Newfoundland:
+* <strong>CSM impacted pond</strong> ~240m upwind of a nesting colony (Bird Rock, Cape St. Mary’s (CSM), Newfoundland) made up of gannets, kittiwakes and murres
+* <strong>CSM reference pond</strong> ~2.56 km away from the multispecies colony
+* <strong>Little Fogo Island pond</strong>, another impacted pond, directly adjacent to an atlantic puffin colony</p>
+</blockquote>
+</div>
+<div id="sequencing-library-prep" class="section level3 hasAnchor" number="1.1.2">
+<h3><span class="header-section-number">1.1.2</span> Sequencing &amp; library prep<a href="introduction.html#sequencing-library-prep" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The samples were isolated using a DNA isolation kit and PCR amplified using the V4V5 primers (515FB = GTGYCAGCMGCCGCGGTAA,926R = CCGYCAATTYMTTTRAGTTT)<strong>[2] [3]</strong>. Samples were sequenced by the Integrated Microbiome Resource (IMR) - you can learn more about the sequencing and library details from IMR on their (protocols page)[<a href="https://imr.bio/protocols.html" class="uri">https://imr.bio/protocols.html</a>]. A more in depth explanation is provided in the published project <strong>[1]</strong>.</p>
+</div>
+<div id="files-after-sequencing" class="section level3 hasAnchor" number="1.1.3">
+<h3><span class="header-section-number">1.1.3</span> Files after sequencing<a href="introduction.html#files-after-sequencing" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>You can download the files used in this analysis here:<br />
+<code>rawdata-birds.zip</code> file -
+<code>rawdata-sediments.zip</code> file -</p>
+<p>I keep these files in a folder titled <code>QIIME_files</code> on my Desktop.</p>
+<p>I began with demultiplexed raw sequence data in paired-end .FASTQ format. There are two files for each sample (forwards reads and reverse reads), and 31 samples total, so we have 62 files that are each compressed into GZ format. Each file’s name follows a standard naming convention for .FASTQ files, for example the samples for a northern gannet (NOGA), common murre (COMU), and atlantic puffin (ATPU) sample were named as follows:</p>
+<pre><code>Forward reads                     |   Reverse reads
+NOGA27_S100_L001_R1_001.fastq.gz  |   NOGA27_S100_L001_R2_001.fastq.gz
+COMU33_S110_L001_R1_001.fastq.gz  |   COMU33_S100_L001_R2_001.fastq.gz
+ATPU05_S111_L001_R1_001.fastq.gz  |   ATPU05_S111_L001_R2_001.fastq.gz</code></pre>
+<p>Here, the sample NOGA27 is broken down into 5 parts. The sample ID number <code>NOGA27</code>, the sample number <code>S100_</code>, the lane number <code>L001_</code>, the direction of the reads (forward: <code>R1</code>, reverse: <code>R2</code>), the last segment which will always end with <code>001</code>, the file format <code>.FASTA</code> or <code>.FASTQ</code> depending on the file format (.FASTA contains only reads, .FASTQ contains quality information).</p>
+<p>The <code>.gz</code> at the end of each file name means the file is compressed with a standard GNU zip (gzip) compression algorithm - there are tools and techniques for working with the compressed files without ever un-compressing them, but in the first section of this analysis we unzip the data files and work with decompressed data. If you don’t decompress
+data before running an analysis, tools that work with compressed data almost always decompress the data (in memory) anyways before running a task.
+___</p>
+</div>
+</div>
+<div id="dna-analysis" class="section level2 tabset hasAnchor" number="1.2">
+<h2><span class="header-section-number">1.2</span> <strong>DNA analysis</strong><a href="introduction.html#dna-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>For the DNA analysis, we use a variety of tools and software available on the Graham cluster, including QIIME2, a next-generation microbiome bioinformatics suite that offers a free, user-friendly, and open source platform for both advanced and beginner researchers <strong>[4]</strong>. The analysis using QIIME2 is easily run on the Graham cluster hosted by the Alliance. Platforms like QIIME2 are made available through the cluster by loading environment management systems (modules). These modules allow users to access a consistent and controlled environment for executing commands using different programming languages (R, Python, MATLAB, C/C++, Java, FORTRAN, and Julia). For a list of resources used in this tutorial,
+refer to Ch-10 (Resources).</p>
+<div id="the-graham-cluster" class="section level3 hasAnchor" number="1.2.1">
+<h3><span class="header-section-number">1.2.1</span> The Graham cluster<a href="introduction.html#the-graham-cluster" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The first portion of this tutorial reviews using the Graham cluster hosted by the <a href="https://alliancecan.ca/en">Digital Research Alliance of Canada</a>. Graham is a heterogeneous cluster, suitable for a variety of workloads, and located at the University of Waterloo. The cluster is useful for running jobs that are intensive; jobs are run as a simple text file that contains information about which allocation to run the job on, and let’s you specify how many compute nodes the job needs, how much memory the job needs, and how long the job will take to run. Using a computing cluster is also advantageous because you can log-in to their nodes from any computer, store data and make use of their many client support services.</p>
+<p>Here are some of the useful Wiki pages hosted by the Alliance that you should read if you are a new user:</p>
+<blockquote>
+<p>Getting started - <a href="https://docs.alliancecan.ca/wiki/Getting_started" class="uri">https://docs.alliancecan.ca/wiki/Getting_started</a></p>
+</blockquote>
+<blockquote>
+<p>the Graham cluster - <a href="https://docs.alliancecan.ca/wiki/Graham" class="uri">https://docs.alliancecan.ca/wiki/Graham</a></p>
+</blockquote>
+<blockquote>
+<p>System status - <a href="https://status.alliancecan.ca/" class="uri">https://status.alliancecan.ca/</a></p>
+</blockquote>
+<blockquote>
+<p>Running jobs - <a href="https://docs.alliancecan.ca/wiki/Running_jobs" class="uri">https://docs.alliancecan.ca/wiki/Running_jobs</a></p>
+</blockquote>
+</div>
+<div id="data-accessibility" class="section level3 hasAnchor" number="1.2.2">
+<h3><span class="header-section-number">1.2.2</span> Data accessibility<a href="introduction.html#data-accessibility" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>If you are following along as a tutorial, you can download all of the files I used for this analysis through the (Github repo)[<a href="https://github.com/johannabosch/QIIME2_for_Graham/tree/main" class="uri">https://github.com/johannabosch/QIIME2_for_Graham/tree/main</a>], or you can use your own files and adjust the commands as you go.</p>
+<p><strong>NOTE:</strong> Download and take a look at my metadata files on the <a href="https://github.com/johannabosch/QIIME2_for_Graham">Github repo</a>, they contain important information about each sample. If you’re following along with this analysis, make a folder on your local computer called <code>QIIME_files</code> to keep all of the metadata and rawdata files in. This is also where all of your files from the QIIME output will live. Visit this <a href="https://gregcaporaso.github.io/q2book/using/metadata.html">Q2book</a> to learn more about how to format your metadata files and use them in your analysis.</p>
+<p>If you don’t have your own raw data to work with, you can download the rawdata file titled <code>rawdata.zip</code> for this analysis from this Google drive: <a href="https://drive.google.com/drive/folders/1mwfqLjyuLIpHO0KuhRAuxgYXjnbp1iQH?usp=sharing" class="uri">https://drive.google.com/drive/folders/1mwfqLjyuLIpHO0KuhRAuxgYXjnbp1iQH?usp=sharing</a></p>
+<hr />
+ 
+<hr />
+<p style="text-align: center;">
+Github: <a href="https://github.com/johannabosch">johannabosch</a> </a>
+</p>
+<p style="text-align: center;">
+<span style="color: #808080;"><em><a href="mailto:yohannabosch@gmail.com" class="email">yohannabosch@gmail.com</a></em></span>
+</p>
+<!-- Add icon library -->
+<p><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></p>
+<!-- Add font awesome icons -->
+<p style="text-align: center;">
+<a href="https://www.instagram.com/yohannabosch/" class="fa fa-instagram"></a>
+<a href="https://www.linkedin.com/in/yan-holtz-2477534a/" class="fa fa-linkedin"></a>
+<a href="https://github.com/johannabosch/" class="fa fa-github"></a>
+</p>
+<p> </p>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="compute-canada-basics.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/USERNAME/REPO/edit/BRANCH/01-Introduction.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["_main.pdf", "_main.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>
